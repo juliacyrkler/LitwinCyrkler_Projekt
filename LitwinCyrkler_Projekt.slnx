@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="LitwinCyrkler_Projekt/LitwinCyrkler_Projekt.vcxproj" Id="d6eac119-2d59-4113-9546-c32c576ea8bd" />
+</Solution>
