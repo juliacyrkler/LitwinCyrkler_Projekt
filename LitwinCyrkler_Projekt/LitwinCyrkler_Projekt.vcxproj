@@ -127,7 +127,23 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Administrator.cpp" />
+    <ClCompile Include="Klient.cpp" />
     <ClCompile Include="LitwinCyrkler_Projekt.cpp" />
+    <ClCompile Include="Menadzer.cpp" />
+    <ClCompile Include="Pracownik.cpp" />
+    <ClCompile Include="Produkt.cpp" />
+    <ClCompile Include="Sklep.cpp" />
+    <ClCompile Include="Uzytkownik.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Administrator.h" />
+    <ClInclude Include="Klient.h" />
+    <ClInclude Include="Menadzer.h" />
+    <ClInclude Include="Pracownik.h" />
+    <ClInclude Include="Produkt.h" />
+    <ClInclude Include="Sklep.h" />
+    <ClInclude Include="Uzytkownik.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
