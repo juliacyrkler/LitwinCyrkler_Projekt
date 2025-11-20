@@ -3,6 +3,10 @@
 
 #include <string>
 #include <vector>
+#include "Administrator.h"
+#include "Klient.h"
+#include "Pracownik.h"
+#include "Menadzer.h"
 #include "Produkt.h"
 #include "Uzytkownik.h"
 

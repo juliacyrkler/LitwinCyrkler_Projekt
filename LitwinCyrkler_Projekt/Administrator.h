@@ -9,6 +9,9 @@ using namespace std;
 class Administrator : public Uzytkownik {
 public:
 	Administrator(int id_, std::string imie_, std::string nazwisko_);
+	void interfejsUzytkownika() override;
+	void dodajUzytkownika();
+	void usunUzytkownika();
 };
 
 #endif
