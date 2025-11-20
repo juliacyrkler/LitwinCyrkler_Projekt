@@ -9,6 +9,7 @@ using namespace std;
 class Pracownik : public Uzytkownik {
 public:
 	Pracownik(int id_, std::string imie_, std::string nazwisko_);
+	void interfejsUzytkownika() override;
 };
 
 #endif
