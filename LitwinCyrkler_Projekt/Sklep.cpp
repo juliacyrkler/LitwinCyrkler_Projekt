@@ -24,7 +24,6 @@ void Sklep::ekranPowitalny() {
 			cout << "Podaj has³o: ";
 			cin >> haslo;
 			if (zaloguj(login, haslo)) {
-				cout << endl << "Zalogowano pomyœlnie." << endl << endl;
 				uzytkownik->interfejsUzytkownika();
 			}
 			else {
@@ -65,7 +64,7 @@ void Sklep::ekranPowitalny() {
 
 bool Sklep::zaloguj(string login, string haslo) {
 	//sprawdzenie czy login i haslo znajduja sie w bazie danych, zwrocenie odpowiedniej wartosci i utworzenie obiektu uzytkownika
-	uzytkownik = new Klient(1, "Jan", "Kowalski"); //do zmiany, uytkownik tworzony na postawie danych z bazy
+	uzytkownik = new Administrator(1, "Jan", "Kowalski"); //do zmiany, uytkownik tworzony na postawie danych z bazy
 	return true;
 }
 

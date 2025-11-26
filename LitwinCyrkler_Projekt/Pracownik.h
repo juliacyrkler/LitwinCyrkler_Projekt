@@ -7,9 +7,14 @@
 using namespace std;
 
 class Pracownik : public Uzytkownik {
+private:
+	double stawkaGodzinowa;
+	int liczbaGodzin;
 public:
-	Pracownik(int id_, std::string imie_, std::string nazwisko_);
-	void interfejsUzytkownika() override;
+	Pracownik(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_);
+	double obliczWynagrodzenie();
+	double zwrocStawkeGodzinowa();
+	void ustawStawkeGodzinowa(double stawka);
 };
 
 #endif
