@@ -12,7 +12,7 @@ private:
 	string nazwisko;
 public:
 	Uzytkownik(int id_, string imie_, string nazwisko_);
-	virtual void interfejsUzytkownika();
+	virtual bool interfejsUzytkownika();
 	string zwrocImie();
 };
 
