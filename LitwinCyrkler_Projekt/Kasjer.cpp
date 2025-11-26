@@ -6,7 +6,32 @@ using namespace std;
 
 Kasjer::Kasjer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_) {}
 
-void Kasjer::interfejsUzytkownika() {
-	//interfejs pracownika
-	cout << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako kasjer." << endl;
+bool Kasjer::interfejsUzytkownika() {
+	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako kasjer." << endl;
+
+	bool wyloguj = false;
+	while (!wyloguj) {
+		cout << "Co chcesz zrobiæ?" << endl;
+		cout << "--> 1 - Obs³u¿ klienta" << endl;
+		cout << "--> 2 - Aktualizuj asortyment" << endl;
+		cout << "--> 3 - Wyloguj siê" << endl;
+		//???
+		int wybor;
+		cin >> wybor;
+
+		switch (wybor) {
+		case 1:
+
+			break;
+		case 2:
+
+			break;
+		case 3:
+			wyloguj = true;
+			break;
+		default:
+			break;
+		}
+	}
+	return true;
 }
