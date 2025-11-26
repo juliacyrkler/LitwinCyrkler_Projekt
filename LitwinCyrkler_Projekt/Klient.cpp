@@ -8,5 +8,5 @@ Klient::Klient(int id_, std::string imie_, std::string nazwisko_) : Uzytkownik(i
 
 void Klient::interfejsUzytkownika() {
 	//interfejs uzytkownika...
-	cout << "Lorem ipsum" << endl;
+	cout << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako klient." << endl;
 }
