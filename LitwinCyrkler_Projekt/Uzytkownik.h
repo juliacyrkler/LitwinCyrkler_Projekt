@@ -13,6 +13,7 @@ private:
 public:
 	Uzytkownik(int id_, string imie_, string nazwisko_);
 	virtual void interfejsUzytkownika();
+	string zwrocImie();
 };
 
 #endif
