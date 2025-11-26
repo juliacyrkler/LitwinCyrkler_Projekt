@@ -2,13 +2,13 @@
 #define MENADZER_H
 
 #include <string>
-#include "Uzytkownik.h"
+#include "Pracownik.h"
 
 using namespace std;
 
-class Menadzer : public Uzytkownik {
+class Menadzer : public Pracownik {
 public:
-	Menadzer(int id_, std::string imie_, std::string nazwisko_);
+	Menadzer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_);
 	void interfejsUzytkownika() override;
 };
 
