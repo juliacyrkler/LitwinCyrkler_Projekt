@@ -16,6 +16,7 @@ public:
 	void pokazStanKonta();
 	void wyswietlProdukty();
 	void pokazKoszyk();
+	void wplacSrodki();
 };
 
 #endif
