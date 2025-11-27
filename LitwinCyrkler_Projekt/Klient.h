@@ -7,9 +7,15 @@
 using namespace std;
 
 class Klient : public Uzytkownik {
+private:
+	int punktyLojalnosciowe;
+	double srodkiNaKoncie;
 public:
-	Klient(int id_, std::string imie_, std::string nazwisko_);
-	void interfejsUzytkownika() override;
+	Klient(int id_, std::string imie_, std::string nazwisko_, int punkty_, double srodki_);
+	bool interfejsUzytkownika() override;
+	void pokazStanKonta();
+	void wyswietlProdukty();
+	void pokazKoszyk();
 };
 
 #endif
