@@ -21,6 +21,7 @@ public:
 	void ekranPowitalny();
 	bool zaloguj(string login, string haslo);
 	bool utworzKonto(string imie, string nazwisko, string login, string haslo);
+	void wczytajProdukty();
 };
 
 #endif

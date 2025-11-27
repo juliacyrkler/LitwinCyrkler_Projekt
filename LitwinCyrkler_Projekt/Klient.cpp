@@ -10,15 +10,16 @@ Klient::Klient(int id_, std::string imie_, std::string nazwisko_, int punkty_, d
 }
 
 bool Klient::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako klient." << endl;
+	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako klient.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
-		cout << "Co chcesz zrobiæ?" << endl;
+		cout << endl << "Co chcesz zrobiæ?" << endl;
 		cout << "--> 1 - Wyœwietl produkty" << endl;
 		cout << "--> 2 - PrzejdŸ do koszyka" << endl;
 		cout << "--> 3 - Poka¿ œrodki na koncie" << endl;
-		cout << "--> 4 - Wyloguj siê" << endl;
+		cout << "--> 4 - Wp³aæ œrodki na konto" << endl;
+		cout << "--> 5 - Wyloguj siê" << endl;
 		int wybor;
 		cin >> wybor;
 
@@ -33,6 +34,9 @@ bool Klient::interfejsUzytkownika() {
 			this->pokazStanKonta();
 			break;
 		case 4:
+			this->wplacSrodki();
+			break;
+		case 5:
 			wyloguj = true;
 			break;
 		default:
@@ -53,4 +57,19 @@ void Klient::wyswietlProdukty() {
 
 void Klient::pokazKoszyk() {
 	//to be changed
+}
+
+void Klient::wplacSrodki() {
+	double kwota;
+	cout << "Podaj kwotê do wp³acenia: ";
+	cin >> kwota;
+	if (cin.fail() || kwota <= 0) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawid³owa kwota." << endl;
+		return;
+	}
+	this->srodkiNaKoncie += kwota;
+	//zmiana stanu konta w bazie danych
+	cout << "Wp³acono " << kwota << " z³ na konto. Twój stan œrodków wynosi teraz " << this->srodkiNaKoncie << " z³." << endl;
 }
