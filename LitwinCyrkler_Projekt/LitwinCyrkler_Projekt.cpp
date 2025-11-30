@@ -1,4 +1,9 @@
-﻿#include <iostream>
+﻿#include <cppconn/driver.h>
+#include <cppconn/exception.h>
+#include <cppconn/statement.h>
+#include <mysql_connection.h>
+#include <mysql_driver.h>
+#include <iostream>
 #include <locale.h>
 #include <vector>
 #include "Sklep.h"
@@ -9,7 +14,38 @@ int main()
 {
     setlocale(LC_ALL, "");
 
-    Sklep* zabka = new Sklep();
+    try {
+        sql::mysql::MySQL_Driver* driver;
+        sql::Connection* con;
+
+        driver = sql::mysql::get_mysql_driver_instance();
+		con = driver->connect("tcp://127.0.0.1:3306", "root", ""); //Zmienić hasło jeśli jest ustawione
+
+        con->setSchema("sklep");
+
+        sql::Statement* stmt;
+        stmt = con->createStatement();
+
+        string selectDataSQL = "SELECT * FROM users";
+
+        sql::ResultSet* res
+            = stmt->executeQuery(selectDataSQL);
+
+        int count = 0;
+        while (res->next()) {
+            cout << " User " << ++count << ": "
+                << res->getString("login") << endl;
+        }
+
+        delete res;
+        delete stmt;
+        delete con;
+
+        Sklep* zabka = new Sklep();
+    }
+    catch (sql::SQLException& e) {
+        std::cerr << "SQL Error: " << e.what() << std::endl;
+    }
 
     return 0;
 }
