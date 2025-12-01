@@ -80,10 +80,18 @@ void Administrator::dodajUzytkownika() {
 
 	sql::Statement* kwerenda;
 	kwerenda = polaczenie->createStatement();
+	string loginSelect = "select * from users where login = \"" + login + "\";";
+	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
+	if (wynik->next()) {
+		cout << "U¿ytkownik o podanym loginie ju¿ istnieje." << endl;
+		delete wynik;
+		delete kwerenda;
+		return;
+	}
 	insert1 = "insert into users values(null, \"" + login + "\", \"" + haslo + "\");";
 	kwerenda->execute(insert1);
 	string select = "select max(id) as max_id from users;";
-	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	wynik = kwerenda->executeQuery(select);
 	if (wynik->next()) {
 		id = wynik->getString("max_id");
 	}
@@ -95,5 +103,46 @@ void Administrator::dodajUzytkownika() {
 }
 
 void Administrator::usunUzytkownika() {
-	//wyœwietlenie wszystkch u¿ytkowników, wpisanie id u¿ytkownika do usuniêcia i usuniêcie go z bazy danych
+	cout << "--> 1 - Usuñ pracownika" << endl;
+	cout << "--> 2 - Usuñ klienta" << endl;
+	int wybor;
+	cin >> wybor;
+	if (cin.fail() || (wybor != 1 && wybor != 2)) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Podano nieprawid³owe dane." << endl;
+		return;
+	}
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string delete1, delete2, select;
+	string tabela = (wybor == 1) ? "pracownicy" : "klienci";
+	cout << "Lista u¿ytkowników do usuniêcia:" << endl;
+	select = (wybor == 1) ? "select user_id, imie, nazwisko, typ_pracownika from pracownicy;" : "select user_id, imie, nazwisko from klienci;";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	while (wynik->next()) {
+		cout << "ID: " << wynik->getInt("user_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko");
+		if (wybor == 1) cout << " - " << wynik->getString("typ_pracownika");
+		cout << endl;
+	}
+	int id;
+	cout << "Podaj ID u¿ytkownika do usuniêcia: ";
+	cin >> id;
+	if (cin.fail() || id < 1) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Podano nieprawid³owe dane." << endl;
+		return;
+	}
+	delete1 = "delete from " + tabela + " where user_id = " + to_string(id) + ";";
+	delete2 = "delete from users where id = " + to_string(id) + ";";
+	kwerenda->execute(delete1);
+	kwerenda->execute(delete2);
+	if (kwerenda->getUpdateCount() > 0) {
+		cout << "U¿ytkownik zosta³ usuniêty." << endl;
+	} else {
+		cout << "Nie znaleziono u¿ytkownika o podanym ID." << endl;
+	}
+	delete kwerenda;
+	delete wynik;
 }
