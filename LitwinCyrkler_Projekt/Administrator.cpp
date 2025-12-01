@@ -1,10 +1,11 @@
 #include <iostream>
 #include <string>
 #include "Administrator.h"
+#include <cppconn/statement.h>
 
 using namespace std;
 
-Administrator::Administrator(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_) {}
+Administrator::Administrator(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Administrator::interfejsUzytkownika() {
 	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako administrator.";
@@ -14,7 +15,6 @@ bool Administrator::interfejsUzytkownika() {
 		cout << endl << "Co chcesz zrobiæ?" << endl;
 		cout << "--> 1 - Dodaj nowego u¿ytkownika" << endl;
 		cout << "--> 2 - Usuñ u¿ytkownika" << endl;
-		//mo¿e edycja danych u¿ytkownika?
 		cout << "--> 3 - Wyloguj siê" << endl;
 		int wybor;
 		cin >> wybor;
@@ -39,7 +39,7 @@ bool Administrator::interfejsUzytkownika() {
 void Administrator::dodajUzytkownika() {
 	int typ, liczba;
 	double stawka;
-	string imie, nazwisko, login, haslo;
+	string imie, nazwisko, login, haslo, stanowisko, id, insert1, insert2;
 	cout << "Podaj typ nowego u¿ytkownika (1 - klient, 2 - kasjer, 3 - menad¿er, 4 - administrator): ";
 	cin >> typ;
 	if (cin.fail() || typ < 1 || typ > 4) {
@@ -56,6 +56,7 @@ void Administrator::dodajUzytkownika() {
 	cin >> login;
 	cout << "Podaj has³o nowego u¿ytkownika: ";
 	cin >> haslo;
+
 	if (typ > 1) {
 		cout << "Podaj stawkê godzinow¹ nowego pracownika: ";
 		cin >> stawka;
@@ -74,16 +75,25 @@ void Administrator::dodajUzytkownika() {
 			return;
 		}
 
-		string stanowisko = (typ == 2) ? "kasjer" : (typ == 3) ? "menadzer" : "administrator";
+		stanowisko = (typ == 2) ? "kasjer" : (typ == 3) ? "menadzer" : "administrator";
+	}
 
-		//dodanie pracownika do tabeli pracownikow
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	insert1 = "insert into users values(null, \"" + login + "\", \"" + haslo + "\");";
+	kwerenda->execute(insert1);
+	string select = "select max(id) as max_id from users;";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	if (wynik->next()) {
+		id = wynik->getString("max_id");
 	}
-	else {
-		//dodanie klienta do tabeli klientow (œrodki i punkty na 0)
-	}
-	//dodanie loginu i hasla do tabeli z loginami
+	if (typ > 1)  insert2 = "insert into pracownicy values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", \"" + stanowisko + "\", " + to_string(stawka) + ", " + to_string(liczba) + ");";
+	else insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	kwerenda->execute(insert2);
+	delete wynik;
+	delete kwerenda;
 }
 
 void Administrator::usunUzytkownika() {
-	//wyœwietlenie wszystkch u¿ytkowników, wpisanie id u¿ytkownika do usuniêcia i usuniêcie go z bazy danych?
+	//wyœwietlenie wszystkch u¿ytkowników, wpisanie id u¿ytkownika do usuniêcia i usuniêcie go z bazy danych
 }

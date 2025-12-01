@@ -9,6 +9,7 @@
 #include "Menadzer.h"
 #include "Produkt.h"
 #include "Uzytkownik.h"
+#include <cppconn/driver.h>
 
 using namespace std;
 
@@ -16,8 +17,10 @@ class Sklep {
 private:
     Uzytkownik* uzytkownik;
     vector <Produkt> produkty;
+	sql::Connection* polaczenie;
 public:
-    Sklep();
+    Sklep(sql::Connection *con);
+	~Sklep();
 	void ekranPowitalny();
 	bool zaloguj(string login, string haslo);
 	bool utworzKonto(string imie, string nazwisko, string login, string haslo);

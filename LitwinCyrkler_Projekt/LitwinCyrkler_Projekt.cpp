@@ -23,7 +23,7 @@ int main()
 
         con->setSchema("sklep");
 
-        sql::Statement* stmt;
+        /*sql::Statement* stmt;
         stmt = con->createStatement();
 
         string selectDataSQL = "SELECT * FROM users";
@@ -38,10 +38,11 @@ int main()
         }
 
         delete res;
-        delete stmt;
-        delete con;
+        delete stmt;*/
 
-        Sklep* zabka = new Sklep();
+        Sklep* zabka = new Sklep(con);
+
+        delete con;
     }
     catch (sql::SQLException& e) {
         std::cerr << "SQL Error: " << e.what() << std::endl;
