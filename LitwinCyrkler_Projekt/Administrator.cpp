@@ -1,4 +1,5 @@
 #include <iostream>
+#include <stdlib.h>
 #include <string>
 #include "Administrator.h"
 #include <cppconn/statement.h>
@@ -8,14 +9,14 @@ using namespace std;
 Administrator::Administrator(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Administrator::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako administrator.";
+	cout << endl << "Witaj, " << this->zwrocImie() << "! JesteÅ“ zalogowany jako administrator.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
-		cout << endl << "Co chcesz zrobiæ?" << endl;
-		cout << "--> 1 - Dodaj nowego u¿ytkownika" << endl;
-		cout << "--> 2 - Usuñ u¿ytkownika" << endl;
-		cout << "--> 3 - Wyloguj siê" << endl;
+		cout << endl << "Co chcesz zrobiÃ¦?" << endl;
+		cout << "--> 1 - Dodaj nowego uÂ¿ytkownika" << endl;
+		cout << "--> 2 - UsuÃ± uÂ¿ytkownika" << endl;
+		cout << "--> 3 - Wyloguj siÃª" << endl;
 		int wybor;
 		cin >> wybor;
 
@@ -28,6 +29,7 @@ bool Administrator::interfejsUzytkownika() {
 			break;
 		case 3:
 			wyloguj = true;
+			system("cls");
 			break;
 		default:
 			break;
@@ -40,38 +42,38 @@ void Administrator::dodajUzytkownika() {
 	int typ, liczba;
 	double stawka;
 	string imie, nazwisko, login, haslo, stanowisko, id, insert1, insert2;
-	cout << "Podaj typ nowego u¿ytkownika (1 - klient, 2 - kasjer, 3 - menad¿er, 4 - administrator): ";
+	cout << "Podaj typ nowego uÂ¿ytkownika (1 - klient, 2 - kasjer, 3 - menadÂ¿er, 4 - administrator): ";
 	cin >> typ;
 	if (cin.fail() || typ < 1 || typ > 4) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		cout << "Nieprawid³owy typ u¿ytkownika." << endl;
+		cout << "NieprawidÂ³owy typ uÂ¿ytkownika." << endl;
 		return;
 	}
-	cout << "Podaj imiê nowego u¿ytkownika: ";
+	cout << "Podaj imiÃª nowego uÂ¿ytkownika: ";
 	cin >> imie;
-	cout << "Podaj nazwisko nowego u¿ytkownika: ";
+	cout << "Podaj nazwisko nowego uÂ¿ytkownika: ";
 	cin >> nazwisko;
-	cout << "Podaj login nowego u¿ytkownika: ";
+	cout << "Podaj login nowego uÂ¿ytkownika: ";
 	cin >> login;
-	cout << "Podaj has³o nowego u¿ytkownika: ";
+	cout << "Podaj hasÂ³o nowego uÂ¿ytkownika: ";
 	cin >> haslo;
 
 	if (typ > 1) {
-		cout << "Podaj stawkê godzinow¹ nowego pracownika: ";
+		cout << "Podaj stawkÃª godzinowÂ¹ nowego pracownika: ";
 		cin >> stawka;
 		if (cin.fail() || stawka < 30.5) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Nieprawid³owe dane." << endl;
+			cout << "NieprawidÂ³owe dane." << endl;
 			return;
 		}
-		cout << "Podaj liczbê godzin pracy na miesi¹c nowego pracownika: ";
+		cout << "Podaj liczbÃª godzin pracy na miesiÂ¹c nowego pracownika: ";
 		cin >> liczba;
 		if (cin.fail() || liczba < 0) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			cout << "Nieprawid³owe dane." << endl;
+			cout << "NieprawidÂ³owe dane." << endl;
 			return;
 		}
 
@@ -83,7 +85,7 @@ void Administrator::dodajUzytkownika() {
 	string loginSelect = "select * from users where login = \"" + login + "\";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
 	if (wynik->next()) {
-		cout << "U¿ytkownik o podanym loginie ju¿ istnieje." << endl;
+		cout << "UÂ¿ytkownik o podanym loginie juÂ¿ istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
 		return;
@@ -103,21 +105,21 @@ void Administrator::dodajUzytkownika() {
 }
 
 void Administrator::usunUzytkownika() {
-	cout << "--> 1 - Usuñ pracownika" << endl;
-	cout << "--> 2 - Usuñ klienta" << endl;
+	cout << "--> 1 - UsuÃ± pracownika" << endl;
+	cout << "--> 2 - UsuÃ± klienta" << endl;
 	int wybor;
 	cin >> wybor;
 	if (cin.fail() || (wybor != 1 && wybor != 2)) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		cout << "Podano nieprawid³owe dane." << endl;
+		cout << "Podano nieprawidÂ³owe dane." << endl;
 		return;
 	}
 	sql::Statement* kwerenda;
 	kwerenda = polaczenie->createStatement();
 	string delete1, delete2, select;
 	string tabela = (wybor == 1) ? "pracownicy" : "klienci";
-	cout << "Lista u¿ytkowników do usuniêcia:" << endl;
+	cout << "Lista uÂ¿ytkownikÃ³w do usuniÃªcia:" << endl;
 	select = (wybor == 1) ? "select user_id, imie, nazwisko, typ_pracownika from pracownicy;" : "select user_id, imie, nazwisko from klienci;";
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	while (wynik->next()) {
@@ -126,12 +128,12 @@ void Administrator::usunUzytkownika() {
 		cout << endl;
 	}
 	int id;
-	cout << "Podaj ID u¿ytkownika do usuniêcia: ";
+	cout << "Podaj ID uÂ¿ytkownika do usuniÃªcia: ";
 	cin >> id;
 	if (cin.fail() || id < 1) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		cout << "Podano nieprawid³owe dane." << endl;
+		cout << "Podano nieprawidÂ³owe dane." << endl;
 		return;
 	}
 	delete1 = "delete from " + tabela + " where user_id = " + to_string(id) + ";";
@@ -139,9 +141,9 @@ void Administrator::usunUzytkownika() {
 	kwerenda->execute(delete1);
 	if (kwerenda->getUpdateCount() > 0) {
 		kwerenda->execute(delete2);
-		cout << "U¿ytkownik zosta³ usuniêty." << endl;
+		cout << "UÂ¿ytkownik zostaÂ³ usuniÃªty." << endl;
 	} else {
-		cout << "Nie znaleziono u¿ytkownika o podanym ID." << endl;
+		cout << "Nie znaleziono uÂ¿ytkownika o podanym ID." << endl;
 	}
 	delete kwerenda;
 	delete wynik;
