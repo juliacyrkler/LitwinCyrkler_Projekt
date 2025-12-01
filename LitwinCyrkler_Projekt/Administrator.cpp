@@ -137,8 +137,8 @@ void Administrator::usunUzytkownika() {
 	delete1 = "delete from " + tabela + " where user_id = " + to_string(id) + ";";
 	delete2 = "delete from users where id = " + to_string(id) + ";";
 	kwerenda->execute(delete1);
-	kwerenda->execute(delete2);
 	if (kwerenda->getUpdateCount() > 0) {
+		kwerenda->execute(delete2);
 		cout << "U¿ytkownik zosta³ usuniêty." << endl;
 	} else {
 		cout << "Nie znaleziono u¿ytkownika o podanym ID." << endl;

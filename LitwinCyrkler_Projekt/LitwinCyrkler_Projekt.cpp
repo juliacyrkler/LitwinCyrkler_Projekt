@@ -20,25 +20,7 @@ int main()
 
         driver = sql::mysql::get_mysql_driver_instance();
 		con = driver->connect("tcp://127.0.0.1:3306", "root", ""); //Zmienić hasło jeśli jest ustawione
-
         con->setSchema("sklep");
-
-        /*sql::Statement* stmt;
-        stmt = con->createStatement();
-
-        string selectDataSQL = "SELECT * FROM users";
-
-        sql::ResultSet* res
-            = stmt->executeQuery(selectDataSQL);
-
-        int count = 0;
-        while (res->next()) {
-            cout << " User " << ++count << ": "
-                << res->getString("login") << endl;
-        }
-
-        delete res;
-        delete stmt;*/
 
         Sklep* zabka = new Sklep(con);
 
