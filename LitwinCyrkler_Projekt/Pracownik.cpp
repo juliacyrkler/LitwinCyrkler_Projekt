@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Pracownik::Pracownik(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_) : Uzytkownik(id_, imie_, nazwisko_) {
+Pracownik::Pracownik(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Uzytkownik(id_, imie_, nazwisko_, con) {
 	this->stawkaGodzinowa = stawka_;
 	this->liczbaGodzin = liczba_;
 }

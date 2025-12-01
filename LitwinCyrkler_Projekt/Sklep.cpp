@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Sklep::Sklep() {
+Sklep::Sklep(sql::Connection *con) : polaczenie(con) {
 	wczytajProdukty();
 	ekranPowitalny();
 }
@@ -25,7 +25,7 @@ void Sklep::ekranPowitalny() {
 			cout << "Podaj has³o: ";
 			cin >> haslo;
 			if (zaloguj(login, haslo)) {
-				uzytkownik = new Klient(1, "Jan", "Kowalski", 0, 0); //do zmiany, uytkownik tworzony na postawie danych z bazy
+				uzytkownik = new Administrator(1, "Jan", "Kowalski", 0.0, 0, polaczenie); //do zmiany, uytkownik tworzony na postawie danych z bazy
 				if (uzytkownik->interfejsUzytkownika()) {
 					ekranPowitalny();
 				}
@@ -78,4 +78,9 @@ bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo
 
 void Sklep::wczytajProdukty() {
 	//wczytanie produktow z bazy danych do wektora produkty
+}
+
+Sklep::~Sklep() {
+	delete uzytkownik;
+	delete polaczenie;
 }
