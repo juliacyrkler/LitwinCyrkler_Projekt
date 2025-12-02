@@ -1,3 +1,7 @@
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <cppconn/exception.h>
+#include <conio.h>
 #include <iostream>
 #include <string>
 #include "Sklep.h"
@@ -24,8 +28,8 @@ void Sklep::ekranPowitalny() {
 			cin >> login;
 			cout << "Podaj has³o: ";
 			cin >> haslo;
-			if (zaloguj(login, haslo)) {
-				uzytkownik = new Administrator(1, "Jan", "Kowalski", 0.0, 0, polaczenie); //do zmiany, uytkownik tworzony na postawie danych z bazy
+			if (czyUserIstnieje(login, haslo)) {
+				uzytkownik = zaloguj(login, haslo); //do zmiany, uytkownik tworzony na postawie danych z bazy
 				if (uzytkownik->interfejsUzytkownika()) {
 					ekranPowitalny();
 				}
@@ -65,10 +69,71 @@ void Sklep::ekranPowitalny() {
 			break;
 	}
 }
+Uzytkownik* Sklep::zaloguj(string login, string haslo) {
+	if (czyUserIstnieje(login, haslo)) {
+		try {
+			sql::PreparedStatement* pstmt;
+			sql::ResultSet* res;
+			int id = 0;
 
-bool Sklep::zaloguj(string login, string haslo) {
-	//sprawdzenie czy login i haslo znajduja sie w bazie danych, zwrocenie odpowiedniej wartosci i utworzenie obiektu uzytkownika
-	return true;
+			pstmt = polaczenie->prepareStatement("SELECT `id` FROM users WHERE login = ? AND haslo = ?");pstmt->setString(1, login);pstmt->setString(2, haslo);
+			res = pstmt->executeQuery();
+			if (res->next()) {id = res->getInt("id"); }
+			delete res;delete pstmt;
+
+			pstmt = polaczenie->prepareStatement("SELECT * FROM pracownicy WHERE user_id = ?"); pstmt->setInt(1,id); res = pstmt->executeQuery();
+			if (res->next()) {
+				int idPracownika = res->getInt("pracownik_id");
+				string imie =  res->getString("imie");
+				string nazwisko = res->getString("nazwisko");
+				string stanowisko = res->getString("typ_pracownika");
+				double stawka = res->getDouble("stawka_godzinowa");
+				int liczba = res->getInt("godz_w_tyg");
+
+				if (stanowisko == "administrator") { return new Administrator(idPracownika, imie, nazwisko, stawka, liczba, polaczenie); }
+				else if (stanowisko == "menadzer") { return new Menadzer(idPracownika, imie, nazwisko, stawka, liczba, polaczenie); }
+				else {}//return new Kasjer(idPracownika, imie, nazwisko, stawka, liczba, polaczenie);} //a se kolega nie dzia³a bo tak
+
+				delete res; delete pstmt;
+			}
+			else {
+				pstmt = polaczenie->prepareStatement("SELECT * FROM klienci WHERE user_id = ?"); pstmt->setInt(1, id); res = pstmt->executeQuery();
+				res = pstmt->executeQuery();
+				if(res->next()){
+					int idKlienta = res->getInt("klient_id");
+					string imie = res->getString("imie");
+					string nazwisko = res->getString("nazwisko");
+					double srodki = res->getDouble("srodki");
+					int pkt = res->getInt("pkt_znizkowe");
+
+					return new Klient(idKlienta, imie, nazwisko, pkt, srodki, polaczenie);
+				}
+				delete res; delete pstmt;
+			}
+		}
+		catch(sql::SQLException& e){	cout << "B³¹d logowania SQL: " << e.what() << endl;}
+	}
+}
+
+bool Sklep::czyUserIstnieje(string login, string haslo) { //sprawdzenie czy login i haslo znajduja sie w bazie danych
+	try {
+		sql::PreparedStatement* pstmt;
+		sql::ResultSet* res;
+
+		pstmt = polaczenie->prepareStatement("SELECT * FROM users WHERE login = ? AND haslo = ?");
+
+		pstmt->setString(1, login);
+		pstmt->setString(2, haslo);
+
+		res = pstmt->executeQuery();
+
+		bool czyIstnieje = res->next();
+
+		delete res;
+		delete pstmt;
+		return czyIstnieje;
+	}
+	catch (sql::SQLException& e) {		cout << "B³¹d logowania SQL: " << e.what() << endl;    return false;	}
 }
 
 bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo) {

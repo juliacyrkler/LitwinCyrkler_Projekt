@@ -22,7 +22,8 @@ public:
     Sklep(sql::Connection *con);
 	~Sklep();
 	void ekranPowitalny();
-	bool zaloguj(string login, string haslo);
+	bool czyUserIstnieje(string login, string haslo);
+	Uzytkownik* zaloguj(string login, string haslo);
 	bool utworzKonto(string imie, string nazwisko, string login, string haslo);
 	void wczytajProdukty();
 };
