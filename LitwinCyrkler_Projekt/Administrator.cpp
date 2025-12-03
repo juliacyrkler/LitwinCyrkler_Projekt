@@ -106,7 +106,7 @@ void Administrator::dodajUzytkownika() {
 
 void Administrator::usunUzytkownika() {
 	cout << "--> 1 - Usuń pracownika" << endl;
-	cout << "--> 2 - Usuñ klienta" << endl;
+	cout << "--> 2 - Usuń klienta" << endl;
 	int wybor;
 	cin >> wybor;
 	if (cin.fail() || (wybor != 1 && wybor != 2)) {

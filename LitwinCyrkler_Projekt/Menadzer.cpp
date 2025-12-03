@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <cppconn/statement.h>
 #include "Menadzer.h"
 
 using namespace std;
@@ -13,10 +14,12 @@ bool Menadzer::interfejsUzytkownika() {
 	while (!wyloguj) {
 		cout << endl << "Co chcesz zrobiæ?" << endl;
 		cout << "--> 1 - Edytuj asortyment" << endl;
-		cout << "--> 2 - Wyœwietl pracowników" << endl;
-		cout << "--> 3 - Wyœwietl klientów" << endl;
-		cout << "--> 4 - Generuj raport sprzeda¿y" << endl;
-		cout << "--> 5 - Wyloguj siê" << endl;
+		cout << "--> 2 - Wyœwietl asortyment" << endl;
+		cout << "--> 3 - Wyœwietl pracowników" << endl;
+		cout << "--> 4 - Wyœwietl klientów" << endl;
+		cout << "--> 5 - Edytuj dane pracownika" << endl;
+		cout << "--> 6 - Generuj raport sprzeda¿y" << endl;
+		cout << "--> 7 - Wyloguj siê" << endl;
 		int wybor;
 		cin >> wybor;
 
@@ -25,15 +28,22 @@ bool Menadzer::interfejsUzytkownika() {
 			this->edytujAsortyment();
 			break;
 		case 2:
-			this->wyswietlPracownikow();
+			this->wyswietlAsortyment();
 			break;
 		case 3:
-			this->wyswietlKlientow();
+			this->wyswietlPracownikow();
 			break;
 		case 4:
-			this->generujRaportSprzedazy();
+			this->wyswietlKlientow();
 			break;
 		case 5:
+			this->wyswietlPracownikow();
+			this->edytujPracownika();
+			break;
+		case 6:
+			this->generujRaportSprzedazy();
+			break;
+		case 7:
 			wyloguj = true;
 			break;
 		default:
@@ -44,17 +54,277 @@ bool Menadzer::interfejsUzytkownika() {
 }
 
 void Menadzer::wyswietlPracownikow() {
-	//wyœwietlanie danych z bazy danych
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string select;
+	cout << "Lista pracowników:" << endl;
+	select = "select pracownik_id, imie, nazwisko, typ_pracownika, stawka_godzinowa, godz_w_tyg from pracownicy;";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	while (wynik->next()) {
+		cout << "ID: " << wynik->getInt("pracownik_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stanowisko: " << wynik->getString("typ_pracownika") << ", stawka: " << wynik->getDouble("stawka_godzinowa") << " z³/h, liczba godzin w tygodniu: " << wynik->getInt("godz_w_tyg") << endl;
+	}
+	delete wynik;
+	delete kwerenda;
 }
 
 void Menadzer::wyswietlKlientow() {
-	//wyœwietlanie danych z bazy danych
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string select;
+	cout << "Lista klientów:" << endl;
+	select = "select klient_id, imie, nazwisko, srodki, pkt_znizkowe from klienci;";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	while (wynik->next()) {
+		cout << "ID: " << wynik->getInt("klient_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stan œrodków: " << wynik->getDouble("srodki") << " z³, punkty lojalnoœciowe: " << wynik->getInt("pkt_znizkowe") << endl;
+	}
+	delete wynik;
+	delete kwerenda;
+}
+
+void Menadzer::edytujPracownika() {
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string update, select;
+	int pracownikID, edytowanaWartosc;
+	cout << "Podaj ID pracownika do edycji: ";
+	cin >> pracownikID;
+	select = "select * from pracownicy where pracownik_id = " + to_string(pracownikID) + ";";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	if (cin.fail() || pracownikID < 1 || !wynik->next()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Podano nieprawid³owe dane." << endl;
+		return;
+	}
+	cout << "Co chcesz edytowaæ?" << endl;
+	cout << "--> 1 - Stawkê godzinow¹" << endl;
+	cout << "--> 2 - Liczbê godzin pracy w tygodniu" << endl;
+	cin >> edytowanaWartosc;
+	if (cin.fail() || (edytowanaWartosc != 1 && edytowanaWartosc != 2)) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Podano nieprawid³owe dane." << endl;
+		return;
+	}
+	string edytowanePole, nowaWartosc;
+	cout << "Podaj now¹ wartoœæ: ";
+	if(edytowanaWartosc == 1) {
+		double stawka;
+		cin >> stawka;
+		if (cin.fail() || stawka < 0) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Nieprawid³owe dane." << endl;
+			return;
+		}
+		edytowanePole = "stawka_godzinowa";
+		nowaWartosc = to_string(stawka);
+		nowaWartosc = nowaWartosc.replace(nowaWartosc.find(','), 1, ".");
+	} else {
+		int liczbaGodzin;
+		cin >> liczbaGodzin;
+		if (cin.fail() || liczbaGodzin < 0) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Nieprawid³owe dane." << endl;
+			return;
+		}
+		nowaWartosc = to_string(liczbaGodzin);
+		edytowanePole = "godz_w_tyg";
+	}
+	update = "update pracownicy set " + edytowanePole + " = " + nowaWartosc + " where pracownik_id = " + to_string(pracownikID) + ";";
+	kwerenda->execute(update);
+	if (kwerenda->getUpdateCount() > 0) {
+		cout << "Dane pracownika zaktualizowane pomyœlnie." << endl;
+	} else {
+		cout << "Wyst¹pi³ b³¹d podczas aktualizacji danych pracownika." << endl;
+	}
+	delete kwerenda;
+	delete wynik;
+}
+
+void Menadzer::wyswietlAsortyment() {
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string select;
+	cout << "Asortyment sklepu:" << endl;
+	select = "select ID, nazwa, kategoria, cena, na_magazynie from asortyment;";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	while (wynik->next()) {
+		cout << "ID: " << wynik->getInt("ID") << ". " << wynik->getString("nazwa") << " - " << wynik->getString("kategoria") << ", cena: " << wynik->getDouble("cena") << " z³, stan magazynowy: " << wynik->getInt("na_magazynie") << endl;
+	}
+	delete wynik;
+	delete kwerenda;
 }
 
 void Menadzer::edytujAsortyment() {
-	//wyœwietlanie asortymentu, wybór produktu do edycji, wybór edytowanej cechy, zapisanie zmian w bazie danych
+	int wybor, produktID;
+	cout << "Co chcesz zrobiæ?" << endl;
+	cout << "--> 1 - Dodaj produkt" << endl;
+	cout << "--> 2 - Usuñ produkt" << endl;
+	cout << "--> 3 - Edytuj produkt" << endl;
+	cin >> wybor;
+	if (cin.fail() || wybor < 1 || wybor > 3) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawid³owe dane." << endl;
+		return;
+	}
+	if (wybor > 1) {
+		Menadzer::wyswietlAsortyment();
+		string tekst = (wybor == 2) ? "usun¹æ" : "edytowaæ";
+		cout << "Podaj ID produktu, który chcesz " << tekst << ": ";
+		cin >> produktID;
+		if (wybor == 2) Menadzer::usunProdukt(produktID);
+		else Menadzer::modyfikujProdukt(produktID);
+	}
+	else {
+		Menadzer::dodajProdukt();
+	}
 }
 
 void Menadzer::generujRaportSprzedazy() {
 	//generowanie raportu sprzeda¿y z ostatniego miesi¹ca na podstawie tabeli z transakcjami???
+}
+
+void Menadzer::dodajProdukt() {
+	string nazwa, kategoria, insert;
+	double cena;
+	int stanMagazynowy;
+	cout << "Podaj nazwê nowego produktu: ";
+	getline(cin >> ws, nazwa);
+	cout << "Podaj kategoriê nowego produktu: ";
+	getline(cin >> ws, kategoria);
+	cout << "Podaj cenê nowego produktu: ";
+	cin >> cena;
+	if (cin.fail() || cena < 0) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawid³owe dane." << endl;
+		return;
+	}
+	string cena2 = to_string(cena).replace(to_string(cena).find(','), 1, ".");
+	cout << "Podaj stan magazynowy nowego produktu: ";
+	cin >> stanMagazynowy;
+	if (cin.fail() || stanMagazynowy < 0) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawid³owe dane." << endl;
+		return;
+	}
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	insert = "insert into asortyment values (null, \"" + nazwa + "\", \"" + kategoria + "\", " + cena2 + ", " + to_string(stanMagazynowy) + ");";
+	kwerenda->execute(insert);
+	if (kwerenda->getUpdateCount() > 0) {
+		cout << "Produkt dodany pomyœlnie." << endl;
+	} else {
+		cout << "Wyst¹pi³ b³¹d podczas dodawania produktu." << endl;
+	}
+	delete kwerenda;
+}
+
+void Menadzer::usunProdukt(int produktID) {
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string deleteQuery, select;
+	select = "select * from asortyment where ID = " + to_string(produktID) + ";";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	if (!wynik->next()) {
+		cout << "Produkt o podanym ID nie istnieje." << endl;
+		delete wynik;
+		delete kwerenda;
+		return;
+	}
+	deleteQuery = "delete from asortyment where ID = " + to_string(produktID) + ";";
+	kwerenda->execute(deleteQuery);
+	if (kwerenda->getUpdateCount() > 0) {
+		cout << "Produkt usuniêty pomyœlnie." << endl;
+	} else {
+		cout << "Wyst¹pi³ b³¹d podczas usuwania produktu." << endl;
+	}
+	delete kwerenda;
+	delete wynik;
+}
+
+void Menadzer::modyfikujProdukt(int produktID) {
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string update, select, edytowanePole, nowaWartosc;
+	select = "select * from asortyment where ID = " + to_string(produktID) + ";";
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	if (!wynik->next()) {
+		cout << "Produkt o podanym ID nie istnieje." << endl;
+		delete wynik;
+		delete kwerenda;
+		return;
+	}
+	cout << "Co chcesz edytowaæ?" << endl;
+	cout << "--> 1 - Nazwê produktu" << endl;
+	cout << "--> 2 - Kategoriê produktu" << endl;
+	cout << "--> 3 - Cenê produktu" << endl;
+	cout << "--> 4 - Stan magazynowy produktu" << endl;
+	int wybor;
+	cin >> wybor;
+	if (cin.fail() || wybor < 1 || wybor > 4) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawid³owe dane." << endl;
+		delete wynik;
+		delete kwerenda;
+		return;
+	}
+	cout << "Podaj now¹ wartoœæ: ";
+	switch (wybor) {
+		case 1:
+			getline(cin >> ws, nowaWartosc);
+			nowaWartosc = "\"" + nowaWartosc + "\"";
+			edytowanePole = "nazwa";
+			break;
+		case 2:
+			getline(cin >> ws, nowaWartosc);
+			nowaWartosc = "\"" + nowaWartosc + "\"";
+			edytowanePole = "kategoria";
+			break;
+		case 3: {
+			double cena;
+			cin >> cena;
+			if (cin.fail() || cena < 0) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "Nieprawid³owe dane." << endl;
+				delete wynik;
+				delete kwerenda;
+				return;
+			}
+			nowaWartosc = to_string(cena);
+			nowaWartosc = nowaWartosc.replace(nowaWartosc.find(','), 1, ".");
+			edytowanePole = "cena";
+			break;
+		}
+		case 4: {
+			int stanMagazynowy;
+			cin >> stanMagazynowy;
+			if (cin.fail() || stanMagazynowy < 0) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "Nieprawid³owe dane." << endl;
+				delete wynik;
+				delete kwerenda;
+				return;
+			}
+			nowaWartosc = to_string(stanMagazynowy);
+			edytowanePole = "na_magazynie";
+			break;
+		}
+	}
+	update = "update asortyment set " + edytowanePole + " = " + nowaWartosc + " where ID = " + to_string(produktID) + ";";
+	kwerenda->execute(update);
+	if (kwerenda->getUpdateCount() > 0) {
+		cout << "Dane produktu zaktualizowane pomyœlnie." << endl;
+	} else {
+		cout << "Wyst¹pi³ b³¹d podczas aktualizacji danych produktu." << endl;
+	}
+	delete kwerenda;
+	delete wynik;
 }
