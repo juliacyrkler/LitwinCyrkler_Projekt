@@ -5,11 +5,11 @@
 #include <iostream>
 #include <string>
 #include "Sklep.h"
+#include "Kasjer.h"
 
 using namespace std;
 
 Sklep::Sklep(sql::Connection *con) : polaczenie(con) {
-	wczytajProdukty();
 	ekranPowitalny();
 }
 
@@ -29,7 +29,7 @@ void Sklep::ekranPowitalny() {
 			cout << "Podaj has³o: ";
 			cin >> haslo;
 			if (czyUserIstnieje(login, haslo)) {
-				uzytkownik = zaloguj(login, haslo); //do zmiany, uytkownik tworzony na postawie danych z bazy
+				uzytkownik = zaloguj(login, haslo);
 				if (uzytkownik->interfejsUzytkownika()) {
 					ekranPowitalny();
 				}
@@ -92,8 +92,7 @@ Uzytkownik* Sklep::zaloguj(string login, string haslo) {
 
 				if (stanowisko == "administrator") { return new Administrator(idPracownika, imie, nazwisko, stawka, liczba, polaczenie); }
 				else if (stanowisko == "menadzer") { return new Menadzer(idPracownika, imie, nazwisko, stawka, liczba, polaczenie); }
-				else {}//return new Kasjer(idPracownika, imie, nazwisko, stawka, liczba, polaczenie);} //a se kolega nie dzia³a bo tak
-
+				else { return new Kasjer(idPracownika, imie, nazwisko, stawka, liczba, polaczenie); } 
 				delete res; delete pstmt;
 			}
 			else {
@@ -137,12 +136,28 @@ bool Sklep::czyUserIstnieje(string login, string haslo) { //sprawdzenie czy logi
 }
 
 bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo) {
-	//dodanie nowego uzytkownika do bazy danych, zwrocenie odpowiedniej wartosci
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string loginSelect = "select * from users where login = \"" + login + "\";";
+	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
+	if (wynik->next()) {
+		cout << "U¿ytkownik o podanym loginie ju¿ istnieje." << endl;
+		delete wynik;
+		delete kwerenda;
+		return false;
+	}
+	string insert1 = "insert into users values(null, \"" + login + "\", \"" + haslo + "\");";
+	kwerenda->execute(insert1);
+	string select = "select max(id) as max_id from users;", id = "";
+	wynik = kwerenda->executeQuery(select);
+	if (wynik->next()) {
+		id = wynik->getString("max_id");
+	}
+	string insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	kwerenda->execute(insert2);
+	delete wynik;
+	delete kwerenda;
 	return true;
-}
-
-void Sklep::wczytajProdukty() {
-	//wczytanie produktow z bazy danych do wektora produkty
 }
 
 Sklep::~Sklep() {
