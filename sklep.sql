@@ -130,14 +130,27 @@ INSERT INTO `pracownicy` (`user_id`, `pracownik_id`, `imie`, `nazwisko`, `typ_pr
 -- --------------------------------------------------------
 
 --
+-- Struktura tabeli dla tabeli `sprzedaze`
+--
+
+CREATE TABLE `sprzedaze` (
+  `id_transakcji` int(10) UNSIGNED DEFAULT NULL,
+  `id_produktu` int(11) DEFAULT NULL,
+  `ilosc` int(10) UNSIGNED DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Struktura tabeli dla tabeli `transakcje`
 --
 
 CREATE TABLE `transakcje` (
-  `sprzedajacy` int(11) NOT NULL,
-  `kupujacy` int(11) NOT NULL,
-  `data_godzina_transakcji` datetime DEFAULT NULL,
-  `kwota` double NOT NULL
+  `id_transakcji` int(10) UNSIGNED NOT NULL,
+  `sprzedajacy` int(11) DEFAULT NULL,
+  `kupujacy` int(11) DEFAULT NULL,
+  `data_transakcji` date DEFAULT NULL,
+  `godzina_transakcji` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -205,11 +218,16 @@ ALTER TABLE `pracownicy`
   ADD KEY `user_id` (`user_id`);
 
 --
+-- Indeksy dla tabeli `sprzedaze`
+--
+ALTER TABLE `sprzedaze`
+  ADD KEY `id_transakcji` (`id_transakcji`);
+
+--
 -- Indeksy dla tabeli `transakcje`
 --
 ALTER TABLE `transakcje`
-  ADD KEY `sprzedajacy` (`sprzedajacy`),
-  ADD KEY `kupujacy` (`kupujacy`);
+  ADD PRIMARY KEY (`id_transakcji`);
 
 --
 -- Indeksy dla tabeli `users`
@@ -226,13 +244,13 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `asortyment`
 --
 ALTER TABLE `asortyment`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-  MODIFY `klient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
+  MODIFY `klient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
@@ -241,10 +259,16 @@ ALTER TABLE `pracownicy`
   MODIFY `pracownik_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `transakcje`
+--
+ALTER TABLE `transakcje`
+  MODIFY `id_transakcji` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- Constraints for dumped tables
@@ -263,11 +287,14 @@ ALTER TABLE `pracownicy`
   ADD CONSTRAINT `pracownicy_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 
 --
--- Constraints for table `transakcje`
+-- Constraints for table `sprzedaze`
 --
-ALTER TABLE `transakcje`
-  ADD CONSTRAINT `transakcje_ibfk_1` FOREIGN KEY (`sprzedajacy`) REFERENCES `pracownicy` (`pracownik_id`),
-  ADD CONSTRAINT `transakcje_ibfk_2` FOREIGN KEY (`kupujacy`) REFERENCES `klienci` (`klient_id`);
+ALTER TABLE `sprzedaze`
+  ADD CONSTRAINT `sprzedaze_ibfk_1`
+    FOREIGN KEY (`id_transakcji`) REFERENCES `transakcje` (`id_transakcji`),
+  ADD CONSTRAINT `sprzedaze_ibfk_2`
+    FOREIGN KEY (`id_produktu`) REFERENCES `asortyment` (`ID`);
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
