@@ -14,16 +14,16 @@ Klient::Klient(int id_, std::string imie_, std::string nazwisko_, int punkty_, d
 }
 
 bool Klient::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteú zalogowany jako klient.";
+	cout << endl << "Witaj, " << this->zwrocImie() << "! Jeste≈õ zalogowany jako klient.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
-		cout << endl << "Co chcesz zrobiÊ?" << endl;
-		cout << "--> 1 - Wyúwietl produkty" << endl;
-		cout << "--> 2 - Przejdü do koszyka" << endl;
-		cout << "--> 3 - Pokaø úrodki na koncie" << endl;
-		cout << "--> 4 - Wp≥aÊ úrodki na konto" << endl;
-		cout << "--> 5 - Wyloguj siÍ" << endl;
+		cout << endl << "Co chcesz zrobiƒá?" << endl;
+		cout << "--> 1 - Wy≈õwietl produkty" << endl;
+		cout << "--> 2 - Przejd≈∫ do koszyka" << endl;
+		cout << "--> 3 - Poka≈º ≈õrodki na koncie" << endl;
+		cout << "--> 4 - Wp≈Çaƒá ≈õrodki na konto" << endl;
+		cout << "--> 5 - Wyloguj siƒô" << endl;
 		int wybor;
 		cin >> wybor;
 
@@ -51,8 +51,8 @@ bool Klient::interfejsUzytkownika() {
 }
 
 void Klient::pokazStanKonta() {
-	cout << "Stan konta: " << this->srodkiNaKoncie << " z≥" << endl;
-	cout << "Punkty lojalnoúciowe: " << this->punktyLojalnosciowe << endl;
+	cout << "Stan konta: " << this->srodkiNaKoncie << " z≈Ç" << endl;
+	cout << "Punkty lojalno≈õciowe: " << this->punktyLojalnosciowe << endl;
 }
 
 void Klient::wyswietlProdukty() {
@@ -70,13 +70,13 @@ void Klient::wyswietlProdukty() {
 			string nazwaProduktu = res->getString("nazwa");
 			double cena = res->getDouble("cena");
 
-			cout << lp << ". " << nazwaProduktu << " -- " << cena << "z≥" << endl;
+			cout << lp << ". " << nazwaProduktu << " -- " << cena << "z≈Ç" << endl;
 			lp++;
 
 		}break;
 
 	case 2:cout << "Lmao nie." << endl; break; //to be changed
-	default: cout << "Niepoprawny wybÛr!" << endl;
+	default: cout << "Niepoprawny wyb√≥r!" << endl;
 	}
 	delete pstmt; delete res;
 }
@@ -84,25 +84,25 @@ void Klient::wyswietlProdukty() {
 void Klient::pokazKoszyk() {
 		if (koszyk.empty()) {cout << "Koszyk jest pusty." << endl;return;}
 
-		cout << "ZawartoúÊ koszyka:" << endl << "------------------" << endl;
+		cout << "Zawarto≈õƒá koszyka:" << endl << "------------------" << endl;
 		int lp = 1;
 		float suma = 0;
 
 		for (Produkt& p : koszyk) {
-			cout << lp++ << ". "<< p.zwrocNazwe()<< " | Cena: " << p.zwrocCene() << " z≥"<< endl;
+			cout << lp++ << ". "<< p.zwrocNazwe()<< " | Cena: " << p.zwrocCene() << " z≈Ç"<< endl;
 			suma += p.zwrocCene();
 		}
-		cout << "------------------" << endl << "Suma: " << suma << " z≥" << endl;
+		cout << "------------------" << endl << "Suma: " << suma << " z≈Ç" << endl;
 }
 
 void Klient::wplacSrodki() {
 	double kwota;
-	cout << "Podaj kwotÍ do wp≥acenia: ";
+	cout << "Podaj kwotƒô do wp≈Çacenia: ";
 	cin >> kwota;
 	if (cin.fail() || kwota <= 0) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		cout << "Nieprawid≥owa kwota." << endl;
+		cout << "Nieprawid≈Çowa kwota." << endl;
 		return;
 	}
 
@@ -118,11 +118,11 @@ void Klient::wplacSrodki() {
 
 		if (zmodyfikowane > 0){
 			this->srodkiNaKoncie += kwota;
-			cout << "Wp≥acono " << kwota << " z≥. Stan konta: "<< this->srodkiNaKoncie << " z≥." << endl;
+			cout << "Wp≈Çacono " << kwota << " z≈Ç. Stan konta: "<< this->srodkiNaKoncie << " z≈Ç." << endl;
 		}
-		else{cout << "B≥πd do≥adowania úrodkÛw" << endl;}
+		else{cout << "B≈ÇƒÖd do≈Çadowania ≈õrodk√≥w" << endl;}
 
 		delete pstmt;
 	}
-	catch (sql::SQLException& e) {cout << "B≥πd do≥adowania úrodkÛw: " << e.what() << endl;}
+	catch (sql::SQLException& e) {cout << "B≈ÇƒÖd do≈Çadowania ≈õrodk√≥w: " << e.what() << endl;}
 }

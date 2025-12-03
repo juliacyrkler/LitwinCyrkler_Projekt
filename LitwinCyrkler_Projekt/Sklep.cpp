@@ -14,10 +14,10 @@ Sklep::Sklep(sql::Connection *con) : polaczenie(con) {
 }
 
 void Sklep::ekranPowitalny() {
-	cout << "Witamy w aplikacji sklepu ¯abka!" << endl;
-	cout << "--> 1 - Zaloguj siê" << endl;
-	cout << "--> 2 - Utwórz konto" << endl;
-	cout << "--> 3 - WyjdŸ z aplikacji" << endl;
+	cout << "Witamy w aplikacji sklepu Å»abka!" << endl;
+	cout << "--> 1 - Zaloguj siÄ™" << endl;
+	cout << "--> 2 - UtwÃ³rz konto" << endl;
+	cout << "--> 3 - WyjdÅº z aplikacji" << endl;
 	int wybor;
 	cin >> wybor;
 
@@ -26,7 +26,7 @@ void Sklep::ekranPowitalny() {
 			string login, haslo;
 			cout << "Podaj login: ";
 			cin >> login;
-			cout << "Podaj has³o: ";
+			cout << "Podaj hasÅ‚o: ";
 			cin >> haslo;
 			if (czyUserIstnieje(login, haslo)) {
 				uzytkownik = zaloguj(login, haslo);
@@ -35,31 +35,31 @@ void Sklep::ekranPowitalny() {
 				}
 			}
 			else {
-				cout << endl << "B³êdny login lub has³o." << endl << endl;
+				cout << endl << "BÅ‚Ä™dny login lub hasÅ‚o." << endl << endl;
 				ekranPowitalny();
 			}
 			break;
 		}
 		case 2: {
 			string imie, nazwisko, login, haslo, hasloPowtorzone;
-			cout << "Podaj imiê: ";
+			cout << "Podaj imiÄ™: ";
 			cin >> imie;
 			cout << "Podaj nazwisko: ";
 			cin >> nazwisko;
 			cout << "Podaj login: ";
 			cin >> login;
-			cout << "Podaj has³o: ";
+			cout << "Podaj hasÅ‚o: ";
 			cin >> haslo;
 			while (haslo != hasloPowtorzone) {
-				cout << "Powtórz has³o: ";
+				cout << "PowtÃ³rz hasÅ‚o: ";
 				cin >> hasloPowtorzone;
 			}
 			if (utworzKonto(imie, nazwisko, login, haslo)) {
-				cout << endl << "Konto utworzone pomyœlnie." << endl << endl;
+				cout << endl << "Konto utworzone pomyÅ›lnie." << endl << endl;
 				ekranPowitalny();
 			}
 			else {
-				cout << endl << "B³¹d podczas tworzenia konta." << endl << endl;
+				cout << endl << "BÅ‚Ä…d podczas tworzenia konta." << endl << endl;
 				ekranPowitalny();
 			}
 			break;
@@ -110,7 +110,7 @@ Uzytkownik* Sklep::zaloguj(string login, string haslo) {
 				delete res; delete pstmt;
 			}
 		}
-		catch(sql::SQLException& e){	cout << "B³¹d logowania SQL: " << e.what() << endl;}
+		catch(sql::SQLException& e){	cout << "BÅ‚Ä…d logowania SQL: " << e.what() << endl;}
 	}
 }
 
@@ -132,7 +132,7 @@ bool Sklep::czyUserIstnieje(string login, string haslo) { //sprawdzenie czy logi
 		delete pstmt;
 		return czyIstnieje;
 	}
-	catch (sql::SQLException& e) {		cout << "B³¹d logowania SQL: " << e.what() << endl;    return false;	}
+	catch (sql::SQLException& e) {		cout << "BÅ‚Ä…d logowania SQL: " << e.what() << endl;    return false;	}
 }
 
 bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo) {
@@ -141,7 +141,7 @@ bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo
 	string loginSelect = "select * from users where login = \"" + login + "\";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
 	if (wynik->next()) {
-		cout << "U¿ytkownik o podanym loginie ju¿ istnieje." << endl;
+		cout << "UÅ¼ytkownik o podanym loginie juÅ¼ istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
 		return false;

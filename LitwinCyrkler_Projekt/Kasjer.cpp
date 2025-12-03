@@ -7,14 +7,14 @@ using namespace std;
 Kasjer::Kasjer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Kasjer::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteœ zalogowany jako kasjer.";
+	cout << endl << "Witaj, " << this->zwrocImie() << "! JesteÅ› zalogowany jako kasjer.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
-		cout << endl << "Co chcesz zrobiæ?" << endl;
-		cout << "--> 1 - Obs³u¿ klienta" << endl;
+		cout << endl << "Co chcesz zrobiÄ‡?" << endl;
+		cout << "--> 1 - ObsÅ‚uÅ¼ klienta" << endl;
 		cout << "--> 2 - Aktualizuj asortyment" << endl;
-		cout << "--> 3 - Wyloguj siê" << endl;
+		cout << "--> 3 - Wyloguj siÄ™" << endl;
 		//???
 		int wybor;
 		cin >> wybor;
