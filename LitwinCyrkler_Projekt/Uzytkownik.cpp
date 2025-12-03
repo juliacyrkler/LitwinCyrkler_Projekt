@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include "Uzytkownik.h"
+#include <stdlib.h>
 
 using namespace std;
 
@@ -17,7 +18,9 @@ bool Uzytkownik::interfejsUzytkownika() {
 string Uzytkownik::zwrocImie() {
 	return this->imie;
 }
-
+void Uzytkownik::clearConsole() {
+	system("cls");
+}
 Uzytkownik::~Uzytkownik() {
 	delete polaczenie;
 }
