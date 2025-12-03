@@ -13,6 +13,6 @@ Autorzy: Julia Cyrkler, Laura Litwin - klasa 4p1t, grupa a1
 Aplikacja korzysta z bazy danych MySQL, więc przed uruchomieniem projektu:
 * Za pomocą programu XAMPP uruchom lokalny serwer.
 * Uruchom phpMyAdmin logując się jako użytkownik ```root``` bez hasła.
-* Jeśli taki użytkownik nie istnieje, zamień dane login i hasło w lini 22 pliku ```LitwinCyrkler_Projekt.cpp``` na używane przez siebie.
+* Jeśli taki użytkownik nie istnieje lub wymaga hasła, zamień dane login i hasło w lini 26 pliku ```LitwinCyrkler_Projekt.cpp``` na używane przez siebie.
 * W programie phpMyAdmin utwórz nową bazę danych o nazwie ```sklep```.
 * Do utworzonej bazy zaimportuj tabele i dane z pliku ```sklep.sql```.
