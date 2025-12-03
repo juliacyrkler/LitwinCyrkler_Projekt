@@ -22,6 +22,9 @@ void Produkt::aktualizujCene(float nowaCena) {
 float Produkt::zwrocCene() {
 	return this->cenaProduktu;
 }
+string Produkt::zwrocNazwe() {
+	return this->nazwaProduktu;
+}
 
 int Produkt::zwrocStanMagazynowy() {
 	return this->stanMagazynowy;

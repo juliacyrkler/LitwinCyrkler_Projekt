@@ -15,6 +15,7 @@ public:
     Produkt(string nazwa, string kategoria, float cena, int stan);
     void aktualizujStanMagazynowy(int nowyStanMagazynowy);
     void aktualizujCene(float nowaCena);
+    string zwrocNazwe();
     float zwrocCene();
     int zwrocStanMagazynowy();
     void wyswietlProdukt();
