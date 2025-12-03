@@ -7,17 +7,20 @@ using namespace std;
 
 class Produkt {
 private:
+    int idProduktu;
     string nazwaProduktu;
     string kategoriaProduktu;
     float cenaProduktu;
-    int stanMagazynowy;
+    int iloscWKoszyku;
 public:
-    Produkt(string nazwa, string kategoria, float cena, int stan);
+    Produkt(int id, string nazwa, string kategoria, float cena, int ilosc);
     void aktualizujStanMagazynowy(int nowyStanMagazynowy);
     void aktualizujCene(float nowaCena);
     string zwrocNazwe();
     float zwrocCene();
-    int zwrocStanMagazynowy();
+    int zwrocID();
+    int zwrociloscWKoszyku();
+    void NowaIloscWKoszyku(int ilosc);
     void wyswietlProdukt();
 };
 
