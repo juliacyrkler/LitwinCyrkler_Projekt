@@ -1,5 +1,6 @@
 #include <iostream>
 #include <string>
+#include <ctime>
 #include <cppconn/statement.h>
 #include "Menadzer.h"
 
@@ -18,7 +19,7 @@ bool Menadzer::interfejsUzytkownika() {
 		cout << "--> 3 - Wyœwietl pracowników" << endl;
 		cout << "--> 4 - Wyœwietl klientów" << endl;
 		cout << "--> 5 - Edytuj dane pracownika" << endl;
-		cout << "--> 6 - Generuj raport sprzeda¿y" << endl;
+		cout << "--> 6 - Generuj raport sprzeda¿y z ostatniego miesi¹ca" << endl;
 		cout << "--> 7 - Wyloguj siê" << endl;
 		int wybor;
 		cin >> wybor;
@@ -184,7 +185,37 @@ void Menadzer::edytujAsortyment() {
 }
 
 void Menadzer::generujRaportSprzedazy() {
-	//generowanie raportu sprzeda¿y z ostatniego miesi¹ca na podstawie tabeli z transakcjami???
+	sql::Statement* kwerenda;
+	kwerenda = polaczenie->createStatement();
+	string select, select2;
+	string miesiace[] = { "styczniu", "lutym", "marcu", "kwietniu", "maju", "czerwcu", "lipcu", "sierpniu", "wrzeœniu", "paŸdzierniku", "listopadzie", "grudniu" };
+	int aktualnyMiesiac, aktualnyRok;
+	time_t teraz = time(0);
+	tm* ltm = localtime(&teraz);
+	aktualnyMiesiac = 1 + ltm->tm_mon;
+	aktualnyRok = 1900 + ltm->tm_year;
+	cout << "Raport sprzeda¿y w " << miesiace[aktualnyMiesiac - 2] << " " << to_string(aktualnyRok) << ":" << endl;
+	select = "select a.ID, a.nazwa, sum(s.ilosc) as sprzedane_ilosc, sum(s.ilosc * a.cena) as przychod from sprzedaze s join asortyment a on s.id_produktu = a.ID join transakcje t on s.id_transakcji = t.id_transakcji where MONTH(t.data_transakcji) = " + to_string(aktualnyMiesiac - 1) + " and YEAR(t.data_transakcji) = " + to_string(aktualnyRok) + " group by a.ID, a.nazwa;";
+	kwerenda->executeQuery(select);
+	sql::ResultSet* wynik = kwerenda->executeQuery(select);
+	if (wynik->rowsCount() == 0)
+	{
+		cout << "Brak sprzeda¿y w podanym okresie." << endl;
+		delete wynik;
+		delete kwerenda;
+		return;
+	}
+	while (wynik->next()) {
+		cout << "ID produktu: " << wynik->getInt("ID") << ", nazwa: " << wynik->getString("nazwa") << ", sprzedana iloœæ: " << wynik->getInt("sprzedane_ilosc") << ", przychód: " << wynik->getDouble("przychod") << " z³" << endl;
+	}
+	select2 = "select sum(s.ilosc * a.cena) as laczny_przychod from sprzedaze s join asortyment a on s.id_produktu = a.ID join transakcje t on s.id_transakcji = t.id_transakcji where MONTH(t.data_transakcji) = " + to_string(aktualnyMiesiac - 1) + " and YEAR(t.data_transakcji) = " + to_string(aktualnyRok) + ";";
+	sql::ResultSet* wynik2 = kwerenda->executeQuery(select2);
+	if (wynik2->next()) {
+		cout << endl << "£¹czny przychód w zesz³ym miesi¹cu: " << wynik2->getDouble("laczny_przychod") << " z³" << endl;
+	}
+	delete wynik;
+	delete wynik2;
+	delete kwerenda;
 }
 
 void Menadzer::dodajProdukt() {
