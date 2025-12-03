@@ -15,9 +15,11 @@ public:
 	void wyswietlKlientow();
 	void edytujAsortyment();
 	void generujRaportSprzedazy();
-	//void dodajProdukt();
-	//void usunProdukt();
-	//void modyfikujProdukt();
+	void dodajProdukt();
+	void usunProdukt(int produktID);
+	void modyfikujProdukt(int produktID);
+	void edytujPracownika();
+	void wyswietlAsortyment();
 };
 
 #endif
