@@ -12,6 +12,7 @@ public:
 	Kasjer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con);
 	bool interfejsUzytkownika() override;
 	void wyswietlKlientow();
+	void dodajKlienta();
 };
 
 #endif
