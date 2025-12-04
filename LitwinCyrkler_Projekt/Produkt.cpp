@@ -22,7 +22,7 @@ void Produkt::aktualizujCene(float nowaCena) {
 }
 
 float Produkt::zwrocCene() {
-	return this->cenaProduktu;
+	return this->cenaProduktu*this->iloscWKoszyku;
 }
 string Produkt::zwrocNazwe() {
 	return this->nazwaProduktu;
@@ -39,7 +39,7 @@ void Produkt::NowaIloscWKoszyku(int nowaIlosc) {
 
 
 void Produkt::wyswietlProdukt() {
-	cout << "Id. "<<this->idProduktu << " -- " << this->nazwaProduktu << " -- " << this->cenaProduktu << " z³" << endl;
+	cout << "Id. "<<this->idProduktu << " -- " << this->nazwaProduktu << " -- " << this->cenaProduktu << " z³ -- x"<<this->iloscWKoszyku << endl;
 	//cout << "Kategoria: " << this->kategoriaProduktu << endl;
 	//cout << "Cena: " << this->cenaProduktu << " z³" << endl;
 	//cout << "Stan magazynowy: " << this->stanMagazynowy << endl;

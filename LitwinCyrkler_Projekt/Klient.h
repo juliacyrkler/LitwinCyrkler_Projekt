@@ -19,8 +19,15 @@ public:
 	bool interfejsUzytkownika() override;
 	void pokazStanKonta();
 	void wyswietlProdukty();
+
 	void pokazKoszyk();
+	void dokonajZakupu();
+
 	void wplacSrodki();
+	double cenaKoszyka();
+
+	void dodajDoKoszyka();
+	void wyjmijZKoszyka();
 };
 
 #endif
