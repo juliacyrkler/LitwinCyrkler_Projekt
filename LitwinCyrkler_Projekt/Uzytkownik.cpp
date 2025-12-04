@@ -18,6 +18,11 @@ bool Uzytkownik::interfejsUzytkownika() {
 string Uzytkownik::zwrocImie() {
 	return this->imie;
 }
+
+int Uzytkownik::zwrocID() {
+	return this->id;
+}
+
 void Uzytkownik::clearConsole() {
 	system("cls");
 }

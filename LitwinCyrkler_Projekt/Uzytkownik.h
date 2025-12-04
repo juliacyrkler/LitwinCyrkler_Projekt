@@ -17,6 +17,7 @@ public:
 	~Uzytkownik();
 	virtual bool interfejsUzytkownika();
 	string zwrocImie();
+	int zwrocID();
 	void clearConsole();
 };
 

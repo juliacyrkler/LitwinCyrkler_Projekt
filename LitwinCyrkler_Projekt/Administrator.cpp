@@ -19,20 +19,26 @@ bool Administrator::interfejsUzytkownika() {
 		cout << "--> 3 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
-
-		switch (wybor) {
-		case 1:
-			this->dodajUzytkownika();
-			break;
-		case 2:
-			this->usunUzytkownika();
-			break;
-		case 3:
-			wyloguj = true;
-			system("cls");
-			break;
-		default:
-			break;
+		if (cin.fail() || wybor < 1 || wybor > 3) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Nieprawidłowe dane." << endl;
+		}
+		else {
+			switch (wybor) {
+			case 1:
+				this->dodajUzytkownika();
+				break;
+			case 2:
+				this->usunUzytkownika();
+				break;
+			case 3:
+				wyloguj = true;
+				system("cls");
+				break;
+			default:
+				break;
+			}
 		}
 	}
 	return true;
