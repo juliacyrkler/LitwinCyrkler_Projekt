@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 04, 2025 at 10:06 PM
+-- Generation Time: Dec 05, 2025 at 12:22 AM
 -- Wersja serwera: 10.4.32-MariaDB
--- Wersja PHP: 8.0.30
+-- Wersja PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -160,16 +160,20 @@ CREATE TABLE `transakcje` (
   `sprzedajacy` int(11) DEFAULT NULL,
   `kupujacy` int(11) DEFAULT NULL,
   `data_transakcji` date DEFAULT NULL,
-  `godzina_transakcji` time DEFAULT NULL
+  `godzina_transakcji` time DEFAULT NULL,
+  `CenaTransakcji` double NOT NULL,
+  `Zatwierdzona` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `transakcje`
 --
 
-INSERT INTO `transakcje` (`id_transakcji`, `sprzedajacy`, `kupujacy`, `data_transakcji`, `godzina_transakcji`) VALUES
-(1, 3, 1, '2025-11-13', '14:34:18'),
-(2, 5, 32, '2025-11-28', '22:15:03');
+INSERT INTO `transakcje` (`id_transakcji`, `sprzedajacy`, `kupujacy`, `data_transakcji`, `godzina_transakcji`, `CenaTransakcji`, `Zatwierdzona`) VALUES
+(1, 3, 1, '2025-11-13', '14:34:18', 0, 0),
+(2, 5, 32, '2025-11-28', '22:15:03', 0, 0),
+(3, NULL, 40, '2025-12-05', '00:07:09', 2.799999952316284, 0),
+(4, NULL, 40, '2025-12-05', '00:10:36', 187.59999084472656, 0);
 
 -- --------------------------------------------------------
 
@@ -281,7 +285,7 @@ ALTER TABLE `pracownicy`
 -- AUTO_INCREMENT for table `transakcje`
 --
 ALTER TABLE `transakcje`
-  MODIFY `id_transakcji` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_transakcji` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `users`
