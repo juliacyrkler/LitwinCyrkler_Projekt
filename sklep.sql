@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Lis 30, 2025 at 04:03 PM
+-- Generation Time: Dec 04, 2025 at 10:06 PM
 -- Wersja serwera: 10.4.32-MariaDB
--- Wersja PHP: 8.2.12
+-- Wersja PHP: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -139,6 +139,16 @@ CREATE TABLE `sprzedaze` (
   `ilosc` int(10) UNSIGNED DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `sprzedaze`
+--
+
+INSERT INTO `sprzedaze` (`id_transakcji`, `id_produktu`, `ilosc`) VALUES
+(1, 3, 3),
+(1, 8, 2),
+(2, 5, 1),
+(2, 12, 2);
+
 -- --------------------------------------------------------
 
 --
@@ -152,6 +162,14 @@ CREATE TABLE `transakcje` (
   `data_transakcji` date DEFAULT NULL,
   `godzina_transakcji` time DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `transakcje`
+--
+
+INSERT INTO `transakcje` (`id_transakcji`, `sprzedajacy`, `kupujacy`, `data_transakcji`, `godzina_transakcji`) VALUES
+(1, 3, 1, '2025-11-13', '14:34:18'),
+(2, 5, 32, '2025-11-28', '22:15:03');
 
 -- --------------------------------------------------------
 
@@ -221,7 +239,8 @@ ALTER TABLE `pracownicy`
 -- Indeksy dla tabeli `sprzedaze`
 --
 ALTER TABLE `sprzedaze`
-  ADD KEY `id_transakcji` (`id_transakcji`);
+  ADD KEY `id_transakcji` (`id_transakcji`),
+  ADD KEY `sprzedaze_ibfk_2` (`id_produktu`);
 
 --
 -- Indeksy dla tabeli `transakcje`
@@ -250,7 +269,7 @@ ALTER TABLE `asortyment`
 -- AUTO_INCREMENT for table `klienci`
 --
 ALTER TABLE `klienci`
-  MODIFY `klient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50;
+  MODIFY `klient_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `pracownicy`
@@ -262,13 +281,13 @@ ALTER TABLE `pracownicy`
 -- AUTO_INCREMENT for table `transakcje`
 --
 ALTER TABLE `transakcje`
-  MODIFY `id_transakcji` int(10) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `id_transakcji` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=33;
 
 --
 -- Constraints for dumped tables
@@ -290,11 +309,8 @@ ALTER TABLE `pracownicy`
 -- Constraints for table `sprzedaze`
 --
 ALTER TABLE `sprzedaze`
-  ADD CONSTRAINT `sprzedaze_ibfk_1`
-    FOREIGN KEY (`id_transakcji`) REFERENCES `transakcje` (`id_transakcji`),
-  ADD CONSTRAINT `sprzedaze_ibfk_2`
-    FOREIGN KEY (`id_produktu`) REFERENCES `asortyment` (`ID`);
-
+  ADD CONSTRAINT `sprzedaze_ibfk_1` FOREIGN KEY (`id_transakcji`) REFERENCES `transakcje` (`id_transakcji`),
+  ADD CONSTRAINT `sprzedaze_ibfk_2` FOREIGN KEY (`id_produktu`) REFERENCES `asortyment` (`ID`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
