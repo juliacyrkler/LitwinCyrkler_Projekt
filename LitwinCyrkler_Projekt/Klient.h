@@ -22,6 +22,7 @@ public:
 
 	void pokazKoszyk();
 	void dokonajZakupu();
+	void mojeTransakcje();
 
 	void wplacSrodki();
 	double cenaKoszyka();

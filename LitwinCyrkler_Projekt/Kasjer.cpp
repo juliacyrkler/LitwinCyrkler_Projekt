@@ -1,6 +1,8 @@
 #include <iostream>
 #include <string>
-#include <cppconn/statement.h>
+#include <cppconn/prepared_statement.h>
+#include <cppconn/resultset.h>
+#include <cppconn/exception.h>
 #include "Kasjer.h"
 
 using namespace std;
@@ -13,25 +15,29 @@ bool Kasjer::interfejsUzytkownika() {
 	bool wyloguj = false;
 	while (!wyloguj) {
 		cout << endl << "Co chcesz zrobić?" << endl;
-		cout << "--> 1 - Obsłuż klienta" << endl;
-		cout << "--> 2 - Wyświetl listę klientów" << endl;
-		cout << "--> 3 - Dodaj nowego klienta" << endl;
-		cout << "--> 4 - Wyloguj się" << endl;
+		cout << "--> 1 - Wyświetl transakcje" << endl;
+		cout << "--> 2 - Zatwierdź transakcje" << endl; 
+		cout << "--> 3 - Wyświetl listę klientów" << endl;
+		cout << "--> 4 - Dodaj nowego klienta" << endl;
+		cout << "--> 5 - Wyloguj się" << endl;
 
 		int wybor;
 		cin >> wybor;
 
 		switch (wybor) {
 		case 1:
-
+			this->wyswietlTransakcje();
 			break;
 		case 2:
-			this->wyswietlKlientow();
+			this->zatwierdzTransakcje();
 			break;
 		case 3:
-			this->dodajKlienta();
+			this->wyswietlKlientow();
 			break;
 		case 4:
+			this->dodajKlienta();
+			break;
+		case 5:
 			wyloguj = true;
 			break;
 		default:
@@ -96,4 +102,99 @@ void Kasjer::dodajKlienta() {
 	}
 	delete wynik;
 	delete kwerenda;
+}
+
+void Kasjer::wyswietlTransakcje() {
+	sql::PreparedStatement* pstmt;
+	sql::ResultSet* res;
+	try {
+		pstmt = polaczenie->prepareStatement("SELECT id_transakcji, imie, nazwisko, data_transakcji, godzina_transakcji, CenaTransakcji, Zatwierdzona FROM transakcje, klienci where klienci.klient_id = transakcje.kupujacy;");
+		res = pstmt->executeQuery();
+		while (res->next()) {
+			cout << "Transakcja ID: " << res->getInt("id_transakcji") << ", Klient: " << res->getString("imie") << " " << res->getString("nazwisko") << ", Data: " << res->getString("data_transakcji") << ", Godzina: " << res->getString("godzina_transakcji") << ", Cena: " << res->getDouble("CenaTransakcji") << " zł, Zatwierdzona: " << (res->getInt("Zatwierdzona") ? "Tak" : "Nie") << endl;
+		}
+		delete pstmt; delete res;
+	}
+	catch (sql::SQLException& e) { cout << "Błąd pobierania transakcji: " << e.what() << endl; }
+}
+
+void Kasjer::wyswietlTransakcjeDoZatwierdzenia() {
+	sql::PreparedStatement* pstmt;
+	sql::ResultSet* res;
+	try {
+		pstmt = polaczenie->prepareStatement("SELECT id_transakcji, imie, nazwisko, data_transakcji, godzina_transakcji, CenaTransakcji FROM transakcje, klienci where klienci.klient_id = transakcje.kupujacy AND Zatwierdzona = 0;");
+		res = pstmt->executeQuery();
+		while (res->next()) {
+			cout << "Transakcja ID: " << res->getInt("id_transakcji") << ", Klient: " << res->getString("imie") << " " << res->getString("nazwisko") << ", Data: " << res->getString("data_transakcji") << ", Godzina: " << res->getString("godzina_transakcji") << ", Cena: " << res->getDouble("CenaTransakcji") << " zł" << endl;
+		}
+		delete pstmt; delete res;
+	}
+	catch (sql::SQLException& e) { cout << "Błąd pobierania transakcji do zatwierdzenia: " << e.what() << endl; }
+}
+
+void Kasjer::zatwierdzTransakcje() {
+	this->wyswietlTransakcjeDoZatwierdzenia();
+	int idTransakcji;
+	cout << "Podaj ID transakcji do zatwierdzenia: ";
+	cin >> idTransakcji;
+	sql::PreparedStatement* pstmt;
+	sql::ResultSet* res;
+	try {
+		pstmt = polaczenie->prepareStatement("UPDATE transakcje SET sprzedajacy = ?, Zatwierdzona = 1 WHERE id_transakcji = ?;");
+		pstmt->setInt(1, this->id);
+		pstmt->setInt(2, idTransakcji);
+		int zmodyfikowane = pstmt->executeUpdate();
+		if (zmodyfikowane > 0) {
+			cout << "Pomyślnie zatwierdzono transakcję." << endl;
+			pstmt = polaczenie->prepareStatement(
+				"SELECT klienci.klient_id, transakcje.CenaTransakcji FROM transakcje inner join klienci ON transakcje.kupujacy = klienci.klient_id WHERE id_transakcji = ?;"
+			);
+			pstmt->setInt(1, idTransakcji);
+			res = pstmt->executeQuery();
+			if (res->next()) {
+				int idKlienta = res->getInt("klient_id");
+				double cenaTransakcji = res->getDouble("CenaTransakcji");
+				delete res;
+				pstmt = polaczenie->prepareStatement(
+					"UPDATE klienci SET srodki = srodki - ? WHERE klient_id = ?;"
+				);
+				pstmt->setDouble(1, cenaTransakcji);
+				pstmt->setInt(2, idKlienta);
+				if (pstmt->executeUpdate() > 0) {
+					cout << "Środki zostały pobrane z konta klienta." << endl;
+				} else {
+					cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
+				}
+			}
+			//update stanu magazynowego
+			delete pstmt;
+			pstmt = polaczenie->prepareStatement(
+				"SELECT id_produktu, ilosc FROM sprzedaze WHERE id_transakcji = ?;"
+			);
+			pstmt->setInt(1, idTransakcji);
+			res = pstmt->executeQuery();
+			while (res->next()) {
+				int idProduktu = res->getInt("id_produktu");
+				int iloscSprzedana = res->getInt("ilosc");
+				sql::PreparedStatement* pstmt2;
+				pstmt2 = polaczenie->prepareStatement(
+					"UPDATE asortyment SET na_magazynie = na_magazynie - ? WHERE ID = ?;"
+				);
+				pstmt2->setInt(1, iloscSprzedana);
+				pstmt2->setInt(2, idProduktu);
+				if (pstmt2->executeUpdate() > 0) {
+					cout << "Zaktualizowano stan magazynowy dla produktu ID: " << idProduktu << endl;
+				} else {
+					cout << "Wystąpił błąd podczas aktualizacji stanu magazynowego dla produktu ID: " << idProduktu << endl;
+				}
+				delete pstmt2;
+			}
+			delete res;
+		}
+		else {
+			cout << "Nie znaleziono transakcji o podanym ID lub transakcja już została zatwierdzona." << endl;
+		}
+		delete pstmt;
+	}
+	catch (sql::SQLException& e) { cout << "Błąd zatwierdzania transakcji: " << e.what() << endl; }
 }
