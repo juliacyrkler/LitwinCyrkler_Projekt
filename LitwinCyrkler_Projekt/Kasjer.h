@@ -13,6 +13,9 @@ public:
 	bool interfejsUzytkownika() override;
 	void wyswietlKlientow();
 	void dodajKlienta();
+	void wyswietlTransakcje();
+	void wyswietlTransakcjeDoZatwierdzenia();
+	void zatwierdzTransakcje();
 };
 
 #endif

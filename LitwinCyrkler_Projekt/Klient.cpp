@@ -27,7 +27,8 @@ bool Klient::interfejsUzytkownika() {
 		cout << "--> 5 - Wyjmij z koszyka" << endl;
 		cout << "--> 6 - Pokaż środki na koncie" << endl;
 		cout << "--> 7 - Wpłać środki na konto" << endl;
-		cout << "--> 8 - Wyloguj się" << endl;
+		cout << "--> 8 - Moje transakcje" << endl;
+		cout << "--> 9 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
 
@@ -39,7 +40,8 @@ bool Klient::interfejsUzytkownika() {
 		case 5:this->wyjmijZKoszyka(); break;
 		case 6:this->pokazStanKonta(); break;
 		case 7:this->wplacSrodki(); break;
-		case 8:clearConsole(); wyloguj = true; break;
+		case 8:this->mojeTransakcje(); break;
+		case 9:clearConsole(); wyloguj = true; break;
 		default:break;
 		}
 	}
@@ -68,6 +70,10 @@ void Klient::dodajDoKoszyka() {
 			int ilosc;
 
 			cout << "Ile sztuk produktu dodać?: "; cin >> ilosc; cout << endl;
+			if (res->getInt("na_magazynie")<ilosc) {
+				cout << "Niewystarczająca ilość produktu w magazynie!" << endl;
+				return;
+			}
 			koszyk.emplace_back(id, nazwa, kategoria, FloatCena, ilosc);
 		}
 		else {
@@ -92,7 +98,7 @@ void Klient::wyjmijZKoszyka() {
 			cout << "Ilość w koszyku: " << it->zwrociloscWKoszyku() << endl;
 			cout << "Ile chcesz zabrać?: "; cin >> iloscDoOdjecia; cout << endl;
 
-			int nowaIlosc = it->zwrociloscWKoszyku() - iloscDoOdjecia;
+			nowaIlosc = it->zwrociloscWKoszyku() - iloscDoOdjecia;
 
 			if (nowaIlosc > 0) {
 				it->NowaIloscWKoszyku(nowaIlosc);
@@ -135,7 +141,7 @@ void Klient::dokonajZakupu() {
 			"VALUES (?, ?, ?, ?, ?, ?)"
 		);
 
-		pstmt->setNull(1, sql::DataType::INTEGER); //to sie ustawi dopiero jak kasjer klepnie
+		pstmt->setNull(1, sql::DataType::INTEGER);
 		pstmt->setInt(2, this->id);
 		pstmt->setString(3, data);
 		pstmt->setString(4, godzina);
@@ -145,6 +151,22 @@ void Klient::dokonajZakupu() {
 		if (this->srodkiNaKoncie > cenaKoszyka()) {
 			pstmt->execute();
 			cout << "Po zaakceptowaniu tej transakcji przez kasjera zostaną ściągnięte środki z twojego konta" << endl;
+			for (Produkt& p : koszyk) {
+				sql::PreparedStatement* pstmt2;
+				pstmt2 = polaczenie->prepareStatement("INSERT INTO sprzedaze (id_transakcji, id_produktu, ilosc) values ( ?, ?, ?);");
+				int idTransakcji;
+				sql::ResultSet* res2;
+				res2 = polaczenie->createStatement()->executeQuery("SELECT max(id_transakcji) as max_id FROM transakcje;");
+				if (res2->next()) {
+					idTransakcji = res2->getInt("max_id");
+					pstmt2->setInt(1, idTransakcji);
+					pstmt2->setInt(2, p.zwrocID());
+					pstmt2->setInt(3, p.zwrociloscWKoszyku());
+				}	
+				pstmt2->execute();
+				delete res2;
+				delete pstmt2;
+			}
 			koszyk.clear();
 		}
 		else {
@@ -239,4 +261,19 @@ void Klient::wplacSrodki() {
 		delete pstmt;
 	}
 	catch (sql::SQLException& e) { cout << "Błąd doładowania środków: " << e.what() << endl; }
+}
+
+void Klient::mojeTransakcje() {
+	sql::PreparedStatement* pstmt;
+	sql::ResultSet* res;
+	try {
+		pstmt = polaczenie->prepareStatement("SELECT * FROM transakcje WHERE kupujacy = ?");
+		pstmt->setInt(1, this->id);
+		res = pstmt->executeQuery();
+		while (res->next()) {
+			cout << "Transakcja ID: " << res->getInt("id_transakcji") << ", Data: " << res->getString("data_transakcji") << ", Godzina: " << res->getString("godzina_transakcji") << ", Cena: " << res->getDouble("CenaTransakcji") << " zł, Zatwierdzona: " << (res->getInt("Zatwierdzona") ? "Tak" : "Nie") << endl;
+		}
+		delete pstmt; delete res;
+	}
+	catch (sql::SQLException& e) { cout << "Błąd pobierania transakcji: " << e.what() << endl; }
 }
