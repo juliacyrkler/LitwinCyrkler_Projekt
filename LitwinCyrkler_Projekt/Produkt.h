@@ -14,8 +14,6 @@ private:
     int iloscWKoszyku;
 public:
     Produkt(int id, string nazwa, string kategoria, float cena, int ilosc);
-    void aktualizujStanMagazynowy(int nowyStanMagazynowy);
-    void aktualizujCene(float nowaCena);
     string zwrocNazwe();
     float zwrocCene();
     int zwrocID();

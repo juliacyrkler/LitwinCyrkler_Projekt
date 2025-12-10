@@ -31,6 +31,11 @@ bool Klient::interfejsUzytkownika() {
 		cout << "--> 9 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			wybor = 0;
+		}
 
 		switch (wybor) {
 		case 1:this->wyswietlProdukty(); break;
@@ -55,6 +60,12 @@ void Klient::dodajDoKoszyka() {
 	int dodawanyProduktId;
 	cout << "Proszę podać Nr produktu do dodania: " << endl;
 	cin >> dodawanyProduktId;
+	if (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Niepoprawne ID produktu." << endl;
+		return;
+	}
 
 	try {
 
@@ -90,6 +101,12 @@ void Klient::wyjmijZKoszyka() {
 	for (Produkt& p : koszyk) { p.wyswietlProdukt(); }
 
 	cout << "Produkt o jakim id chciałbyć wyjąć?:"; cin >> idProduktu; cout << endl;
+	if (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Niepoprawne ID produktu." << endl;
+		return;
+	}
 	for (auto it = koszyk.begin(); it != koszyk.end(); ++it) {
 
 		if (it->zwrocID() == idProduktu) {
@@ -97,6 +114,13 @@ void Klient::wyjmijZKoszyka() {
 			it->wyswietlProdukt();
 			cout << "Ilość w koszyku: " << it->zwrociloscWKoszyku() << endl;
 			cout << "Ile chcesz zabrać?: "; cin >> iloscDoOdjecia; cout << endl;
+
+			if (cin.fail() || iloscDoOdjecia <= 0) {
+				cin.clear();
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				cout << "Niepoprawna wartość." << endl;
+				return;
+			}
 
 			nowaIlosc = it->zwrociloscWKoszyku() - iloscDoOdjecia;
 
@@ -123,7 +147,7 @@ void Klient::dokonajZakupu() {
 	cout << "Czy napewno chcesz dokonać zakupu wybranych artykułów?\n -> 1 - Tak\n -> 2 - Nie" << endl;
 	cin >> wybor;
 
-	if (wybor != 1) { return; }
+	if (cin.fail() || wybor != 1) { return; }
 
 	try {
 		time_t teraz = time(nullptr);
