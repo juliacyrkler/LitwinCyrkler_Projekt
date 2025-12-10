@@ -5,6 +5,7 @@
 #include <iostream>
 #include <string>
 #include "Sklep.h"
+#include "stdlib.h"
 #include "Kasjer.h"
 
 using namespace std;
@@ -20,6 +21,7 @@ void Sklep::ekranPowitalny() {
 	cout << "--> 3 - Wyjdź z aplikacji" << endl;
 	int wybor;
 	cin >> wybor;
+	clearConsole();
 	if(cin.fail()){
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
@@ -28,6 +30,7 @@ void Sklep::ekranPowitalny() {
 
 	switch (wybor) {
 		case 1: {
+			clearConsole();
 			string login, haslo;
 			cout << "Podaj login: ";
 			getline(cin >> ws, login);
@@ -40,12 +43,14 @@ void Sklep::ekranPowitalny() {
 				}
 			}
 			else {
+				clearConsole();
 				cout << endl << "Błędny login lub hasło." << endl << endl;
 				ekranPowitalny();
 			}
 			break;
 		}
 		case 2: {
+			clearConsole();
 			string imie, nazwisko, login, haslo, hasloPowtorzone;
 			cout << "Podaj imię: ";
 			getline(cin >> ws, imie);
@@ -60,19 +65,23 @@ void Sklep::ekranPowitalny() {
 				getline(cin >> ws, hasloPowtorzone);
 			}
 			if (utworzKonto(imie, nazwisko, login, haslo)) {
+				clearConsole();
 				cout << endl << "Konto utworzone pomyślnie." << endl << endl;
 				ekranPowitalny();
 			}
 			else {
+				clearConsole();
 				cout << endl << "Błąd podczas tworzenia konta." << endl << endl;
 				ekranPowitalny();
 			}
 			break;
 		}
 		case 3:
+			clearConsole();
 			cout << endl << "Trwa zamykanie aplikacji. Do zobaczenia!";
 			break;
 		default:
+			clearConsole();
 			cout << endl << "Nieprawidłowy wybór. Spróbuj ponownie." << endl << endl;
 			ekranPowitalny();
 			break;
@@ -168,7 +177,7 @@ bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo
 	delete kwerenda;
 	return true;
 }
-
+void Sklep::clearConsole() { system("cls"); }
 Sklep::~Sklep() {
 	delete uzytkownik;
 	delete polaczenie;

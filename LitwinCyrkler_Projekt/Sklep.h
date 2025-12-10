@@ -25,6 +25,7 @@ public:
 	bool czyUserIstnieje(string login, string haslo);
 	Uzytkownik* zaloguj(string login, string haslo);
 	bool utworzKonto(string imie, string nazwisko, string login, string haslo);
+	void clearConsole();
 };
 
 #endif
