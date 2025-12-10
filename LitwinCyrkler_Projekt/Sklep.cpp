@@ -78,7 +78,7 @@ void Sklep::ekranPowitalny() {
 		}
 		case 3:
 			clearConsole();
-			cout << endl << "Trwa zamykanie aplikacji. Do zobaczenia!";
+			cout << endl << "Trwa zamykanie aplikacji. Do zobaczenia!" << endl;
 			break;
 		default:
 			clearConsole();
