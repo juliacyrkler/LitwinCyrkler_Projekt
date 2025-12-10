@@ -10,7 +10,8 @@ using namespace std;
 Kasjer::Kasjer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Kasjer::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako kasjer.";
+	clearConsole();
+	cout <<"Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako kasjer.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
@@ -30,19 +31,19 @@ bool Kasjer::interfejsUzytkownika() {
 		}
 
 		switch (wybor) {
-		case 1:
+		case 1:clearConsole();
 			this->wyswietlTransakcje();
 			break;
-		case 2:
+		case 2:clearConsole();
 			this->zatwierdzTransakcje();
 			break;
-		case 3:
+		case 3:clearConsole();
 			this->wyswietlKlientow();
 			break;
-		case 4:
+		case 4:clearConsole();
 			this->dodajKlienta();
 			break;
-		case 5:
+		case 5:clearConsole();
 			wyloguj = true;
 			break;
 		default:
@@ -86,6 +87,7 @@ void Kasjer::dodajKlienta() {
 	string loginSelect = "select * from users where login = \"" + login + "\";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
 	if (wynik->next()) {
+		clearConsole();
 		cout << "Użytkownik o podanym loginie już istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -103,6 +105,7 @@ void Kasjer::dodajKlienta() {
 	if (kwerenda->getUpdateCount() > 0) {
 		cout << "Pomyślnie dodano nowego klienta." << endl;
 	} else {
+		clearConsole();
 		cout << "Wystąpił błąd podczas dodawania nowego klienta." << endl;
 	}
 	delete wynik;
@@ -134,7 +137,7 @@ void Kasjer::wyswietlTransakcjeDoZatwierdzenia() {
 		}
 		delete pstmt; delete res;
 	}
-	catch (sql::SQLException& e) { cout << "Błąd pobierania transakcji do zatwierdzenia: " << e.what() << endl; }
+	catch (sql::SQLException& e) { clearConsole(); cout << "Błąd pobierania transakcji do zatwierdzenia: " << e.what() << endl; }
 }
 
 void Kasjer::zatwierdzTransakcje() {
@@ -145,6 +148,7 @@ void Kasjer::zatwierdzTransakcje() {
 	if (cin.fail()) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowe ID transakcji." << endl;
 		return;
 	}
@@ -172,9 +176,10 @@ void Kasjer::zatwierdzTransakcje() {
 				pstmt->setDouble(1, cenaTransakcji);
 				pstmt->setInt(2, idKlienta);
 				if (pstmt->executeUpdate() > 0) {
+					clearConsole();
 					cout << "Środki zostały pobrane z konta klienta." << endl;
 				} else {
-					cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
+					clearConsole(); cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
 				}
 			}
 			delete pstmt;
@@ -193,8 +198,10 @@ void Kasjer::zatwierdzTransakcje() {
 				pstmt2->setInt(1, iloscSprzedana);
 				pstmt2->setInt(2, idProduktu);
 				if (pstmt2->executeUpdate() > 0) {
+					clearConsole();
 					cout << "Zaktualizowano stan magazynowy dla produktu ID: " << idProduktu << endl;
 				} else {
+					clearConsole();
 					cout << "Wystąpił błąd podczas aktualizacji stanu magazynowego dla produktu ID: " << idProduktu << endl;
 				}
 				delete pstmt2;
@@ -202,9 +209,10 @@ void Kasjer::zatwierdzTransakcje() {
 			delete res;
 		}
 		else {
+			clearConsole();
 			cout << "Nie znaleziono transakcji o podanym ID lub transakcja już została zatwierdzona." << endl;
 		}
 		delete pstmt;
 	}
-	catch (sql::SQLException& e) { cout << "Błąd zatwierdzania transakcji: " << e.what() << endl; }
+	catch (sql::SQLException& e) { clearConsole();  cout << "Błąd zatwierdzania transakcji: " << e.what() << endl; }
 }

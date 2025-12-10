@@ -9,7 +9,8 @@ using namespace std;
 Menadzer::Menadzer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Menadzer::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako menadżer.";
+	clearConsole();
+	cout << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako menadżer.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
@@ -31,25 +32,32 @@ bool Menadzer::interfejsUzytkownika() {
 
 		switch (wybor) {
 		case 1:
+			clearConsole();
 			this->edytujAsortyment();
 			break;
 		case 2:
+			clearConsole();
 			this->wyswietlAsortyment();
 			break;
 		case 3:
+			clearConsole();
 			this->wyswietlPracownikow();
 			break;
 		case 4:
+			clearConsole();
 			this->wyswietlKlientow();
 			break;
 		case 5:
+			clearConsole();
 			this->wyswietlPracownikow();
 			this->edytujPracownika();
 			break;
 		case 6:
+			clearConsole();
 			this->generujRaportSprzedazy();
 			break;
 		case 7:
+			clearConsole();
 			wyloguj = true;
 			break;
 		default:
@@ -99,6 +107,7 @@ void Menadzer::edytujPracownika() {
 	if (cin.fail() || pracownikID < 1 || !wynik->next()) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Podano nieprawidłowe dane." << endl;
 		return;
 	}
@@ -109,6 +118,7 @@ void Menadzer::edytujPracownika() {
 	if (cin.fail() || (edytowanaWartosc != 1 && edytowanaWartosc != 2)) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Podano nieprawidłowe dane." << endl;
 		return;
 	}
@@ -120,6 +130,7 @@ void Menadzer::edytujPracownika() {
 		if (cin.fail() || stawka < 0) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			clearConsole();
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
@@ -132,6 +143,7 @@ void Menadzer::edytujPracownika() {
 		if (cin.fail() || liczbaGodzin < 0) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			clearConsole();
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
@@ -141,8 +153,10 @@ void Menadzer::edytujPracownika() {
 	update = "update pracownicy set " + edytowanePole + " = " + nowaWartosc + " where pracownik_id = " + to_string(pracownikID) + ";";
 	kwerenda->execute(update);
 	if (kwerenda->getUpdateCount() > 0) {
+		clearConsole();
 		cout << "Dane pracownika zaktualizowane pomyślnie." << endl;
 	} else {
+		clearConsole();
 		cout << "Wystąpił błąd podczas aktualizacji danych pracownika." << endl;
 	}
 	delete kwerenda;
@@ -173,6 +187,7 @@ void Menadzer::edytujAsortyment() {
 	if (cin.fail() || wybor < 1 || wybor > 3) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowe dane." << endl;
 		return;
 	}
@@ -184,6 +199,7 @@ void Menadzer::edytujAsortyment() {
 		if(cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			clearConsole();
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
@@ -211,6 +227,7 @@ void Menadzer::generujRaportSprzedazy() {
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	if (wynik->rowsCount() == 0)
 	{
+		clearConsole();
 		cout << "Brak sprzedaży w podanym okresie." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -242,6 +259,7 @@ void Menadzer::dodajProdukt() {
 	if (cin.fail() || cena < 0) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowe dane." << endl;
 		return;
 	}
@@ -251,6 +269,7 @@ void Menadzer::dodajProdukt() {
 	if (cin.fail() || stanMagazynowy < 0) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowe dane." << endl;
 		return;
 	}
@@ -259,8 +278,10 @@ void Menadzer::dodajProdukt() {
 	insert = "insert into asortyment values (null, \"" + nazwa + "\", \"" + kategoria + "\", " + cena2 + ", " + to_string(stanMagazynowy) + ");";
 	kwerenda->execute(insert);
 	if (kwerenda->getUpdateCount() > 0) {
+		clearConsole();
 		cout << "Produkt dodany pomyślnie." << endl;
 	} else {
+		clearConsole();
 		cout << "Wystąpił błąd podczas dodawania produktu." << endl;
 	}
 	delete kwerenda;
@@ -273,6 +294,7 @@ void Menadzer::usunProdukt(int produktID) {
 	select = "select * from asortyment where ID = " + to_string(produktID) + ";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	if (!wynik->next()) {
+		clearConsole();
 		cout << "Produkt o podanym ID nie istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -281,8 +303,10 @@ void Menadzer::usunProdukt(int produktID) {
 	deleteQuery = "delete from asortyment where ID = " + to_string(produktID) + ";";
 	kwerenda->execute(deleteQuery);
 	if (kwerenda->getUpdateCount() > 0) {
+		clearConsole();
 		cout << "Produkt usunięty pomyślnie." << endl;
 	} else {
+		clearConsole();
 		cout << "Wystąpił błąd podczas usuwania produktu." << endl;
 	}
 	delete kwerenda;
@@ -296,6 +320,7 @@ void Menadzer::modyfikujProdukt(int produktID) {
 	select = "select * from asortyment where ID = " + to_string(produktID) + ";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	if (!wynik->next()) {
+		clearConsole();
 		cout << "Produkt o podanym ID nie istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -311,6 +336,7 @@ void Menadzer::modyfikujProdukt(int produktID) {
 	if (cin.fail() || wybor < 1 || wybor > 4) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowe dane." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -334,6 +360,7 @@ void Menadzer::modyfikujProdukt(int produktID) {
 			if (cin.fail() || cena < 0) {
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				clearConsole();
 				cout << "Nieprawidłowe dane." << endl;
 				delete wynik;
 				delete kwerenda;
@@ -350,6 +377,7 @@ void Menadzer::modyfikujProdukt(int produktID) {
 			if (cin.fail() || stanMagazynowy < 0) {
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				clearConsole();
 				cout << "Nieprawidłowe dane." << endl;
 				delete wynik;
 				delete kwerenda;
@@ -363,8 +391,10 @@ void Menadzer::modyfikujProdukt(int produktID) {
 	update = "update asortyment set " + edytowanePole + " = " + nowaWartosc + " where ID = " + to_string(produktID) + ";";
 	kwerenda->execute(update);
 	if (kwerenda->getUpdateCount() > 0) {
+		clearConsole();
 		cout << "Dane produktu zaktualizowane pomyślnie." << endl;
 	} else {
+		clearConsole();
 		cout << "Wystąpił błąd podczas aktualizacji danych produktu." << endl;
 	}
 	delete kwerenda;

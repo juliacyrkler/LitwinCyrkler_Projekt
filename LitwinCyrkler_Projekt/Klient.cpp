@@ -15,7 +15,8 @@ Klient::Klient(int id_, std::string imie_, std::string nazwisko_, int punkty_, d
 }
 
 bool Klient::interfejsUzytkownika() {
-	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako klient.";
+	clearConsole();
+	cout << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako klient.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
@@ -38,15 +39,15 @@ bool Klient::interfejsUzytkownika() {
 		}
 
 		switch (wybor) {
-		case 1:this->wyswietlProdukty(); break;
-		case 2:this->pokazKoszyk(); break;
-		case 3:this->dokonajZakupu(); break;
-		case 4:this->dodajDoKoszyka(); break;
-		case 5:this->wyjmijZKoszyka(); break;
-		case 6:this->pokazStanKonta(); break;
-		case 7:this->wplacSrodki(); break;
-		case 8:this->mojeTransakcje(); break;
-		case 9:clearConsole(); wyloguj = true; break;
+		case 1:clearConsole(); clearConsole(); this->wyswietlProdukty(); break;
+		case 2:clearConsole(); clearConsole(); this->pokazKoszyk(); break;
+		case 3:clearConsole(); clearConsole(); this->dokonajZakupu(); break;
+		case 4:clearConsole(); clearConsole(); this->dodajDoKoszyka(); break;
+		case 5:clearConsole(); clearConsole(); this->wyjmijZKoszyka(); break;
+		case 6:clearConsole(); clearConsole(); this->pokazStanKonta(); break;
+		case 7:clearConsole(); clearConsole(); this->wplacSrodki(); break;
+		case 8:clearConsole(); clearConsole(); this->mojeTransakcje(); break;
+		case 9:clearConsole(); clearConsole(); wyloguj = true; break;
 		default:break;
 		}
 	}
@@ -63,6 +64,7 @@ void Klient::dodajDoKoszyka() {
 	if (cin.fail()) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Niepoprawne ID produktu." << endl;
 		return;
 	}
@@ -82,28 +84,31 @@ void Klient::dodajDoKoszyka() {
 
 			cout << "Ile sztuk produktu dodać?: "; cin >> ilosc; cout << endl;
 			if (res->getInt("na_magazynie")<ilosc) {
+				clearConsole();
 				cout << "Niewystarczająca ilość produktu w magazynie!" << endl;
 				return;
 			}
 			koszyk.emplace_back(id, nazwa, kategoria, FloatCena, ilosc);
 		}
 		else {
+			clearConsole();
 			cout << "Błąd dodawania produktu do koszyka" << endl;
 		}
 	}
-	catch (sql::SQLException& e) { cout << "Błąd dodawania produktu do koszyka: " << e.what() << endl; }
+	catch (sql::SQLException& e) { clearConsole(); cout << "Błąd dodawania produktu do koszyka: " << e.what() << endl; }
 
 }
 void Klient::wyjmijZKoszyka() {
 	int idProduktu, iloscDoOdjecia, nowaIlosc;
 
-	if (koszyk.empty()) { cout << "Koszyk jest pusty." << endl; return; }
+	if (koszyk.empty()) { clearConsole();  cout << "Koszyk jest pusty." << endl; return; }
 	for (Produkt& p : koszyk) { p.wyswietlProdukt(); }
 
 	cout << "Produkt o jakim id chciałbyć wyjąć?:"; cin >> idProduktu; cout << endl;
 	if (cin.fail()) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Niepoprawne ID produktu." << endl;
 		return;
 	}
@@ -118,6 +123,7 @@ void Klient::wyjmijZKoszyka() {
 			if (cin.fail() || iloscDoOdjecia <= 0) {
 				cin.clear();
 				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				clearConsole();
 				cout << "Niepoprawna wartość." << endl;
 				return;
 			}
@@ -126,13 +132,15 @@ void Klient::wyjmijZKoszyka() {
 
 			if (nowaIlosc > 0) {
 				it->NowaIloscWKoszyku(nowaIlosc);
+				clearConsole();
 				cout << "Zaktualizowano ilość." << endl;
 			}
 			else if (nowaIlosc == 0) {
 				koszyk.erase(it);
+				clearConsole();
 				cout << "Produkt usunięty z koszyka." << endl;
 			}
-			else { cout << "Podana nie poprawna wartość!" << endl; }
+			else { clearConsole(); cout << "Podana nie poprawna wartość!" << endl; }
 
 			return;
 		}
@@ -174,6 +182,7 @@ void Klient::dokonajZakupu() {
 
 		if (this->srodkiNaKoncie > cenaKoszyka()) {
 			pstmt->execute();
+			clearConsole();
 			cout << "Po zaakceptowaniu tej transakcji przez kasjera zostaną ściągnięte środki z twojego konta" << endl;
 			for (Produkt& p : koszyk) {
 				sql::PreparedStatement* pstmt2;
@@ -194,6 +203,7 @@ void Klient::dokonajZakupu() {
 			koszyk.clear();
 		}
 		else {
+			clearConsole();
 			cout << "Niewystarczająca liczba zł na koncie!" << endl; return;
 		}
 
@@ -262,6 +272,7 @@ void Klient::wplacSrodki() {
 	if (cin.fail() || kwota <= 0) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowa kwota." << endl;
 		return;
 	}
@@ -280,11 +291,11 @@ void Klient::wplacSrodki() {
 			this->srodkiNaKoncie += kwota;
 			cout << "Wpłacono " << kwota << " zł. Stan konta: " << this->srodkiNaKoncie << " zł." << endl;
 		}
-		else { cout << "Błąd doładowania środków" << endl; }
+		else { clearConsole(); cout << "Błąd doładowania środków" << endl; }
 
 		delete pstmt;
 	}
-	catch (sql::SQLException& e) { cout << "Błąd doładowania środków: " << e.what() << endl; }
+	catch (sql::SQLException& e) { clearConsole(); cout << "Błąd doładowania środków: " << e.what() << endl; }
 }
 
 void Klient::mojeTransakcje() {
@@ -299,5 +310,5 @@ void Klient::mojeTransakcje() {
 		}
 		delete pstmt; delete res;
 	}
-	catch (sql::SQLException& e) { cout << "Błąd pobierania transakcji: " << e.what() << endl; }
+	catch (sql::SQLException& e) { clearConsole(); cout << "Błąd pobierania transakcji: " << e.what() << endl; }
 }
