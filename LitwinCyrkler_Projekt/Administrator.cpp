@@ -19,6 +19,11 @@ bool Administrator::interfejsUzytkownika() {
 		cout << "--> 3 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			wybor = 0;
+		}
 
 		switch (wybor) {
 		case 1:
@@ -51,13 +56,13 @@ void Administrator::dodajUzytkownika() {
 		return;
 	}
 	cout << "Podaj imię nowego użytkownika: ";
-	cin >> imie;
+	getline(cin >> ws, imie);
 	cout << "Podaj nazwisko nowego użytkownika: ";
-	cin >> nazwisko;
+	getline(cin >> ws, nazwisko);
 	cout << "Podaj login nowego użytkownika: ";
-	cin >> login;
+	getline(cin >> ws, login);
 	cout << "Podaj hasło nowego użytkownika: ";
-	cin >> haslo;
+	getline(cin >> ws, haslo);
 
 	if (typ > 1) {
 		cout << "Podaj stawkę godzinową nowego pracownika: ";

@@ -23,6 +23,11 @@ bool Menadzer::interfejsUzytkownika() {
 		cout << "--> 7 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			wybor = 0;
+		}
 
 		switch (wybor) {
 		case 1:
@@ -176,6 +181,12 @@ void Menadzer::edytujAsortyment() {
 		string tekst = (wybor == 2) ? "usunąć" : "edytować";
 		cout << "Podaj ID produktu, który chcesz " << tekst << ": ";
 		cin >> produktID;
+		if(cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			cout << "Nieprawidłowe dane." << endl;
+			return;
+		}
 		if (wybor == 2) Menadzer::usunProdukt(produktID);
 		else Menadzer::modyfikujProdukt(produktID);
 	}

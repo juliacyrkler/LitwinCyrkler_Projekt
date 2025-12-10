@@ -10,15 +10,6 @@ Produkt::Produkt(int id, string nazwa, string kategoria, float cena, int ilosc) 
 	this->kategoriaProduktu = kategoria;
 	this->cenaProduktu = cena;
 	this->iloscWKoszyku = ilosc;
-	//this->stanMagazynowy = stan;
-}
-
-void Produkt::aktualizujStanMagazynowy(int nowyStanMagazynowy) {
-	//this->stanMagazynowy = nowyStanMagazynowy;
-}
-
-void Produkt::aktualizujCene(float nowaCena) {
-	this->cenaProduktu = nowaCena;
 }
 
 float Produkt::zwrocCene() {

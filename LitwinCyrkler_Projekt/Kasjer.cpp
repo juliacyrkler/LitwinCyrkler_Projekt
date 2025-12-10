@@ -23,6 +23,11 @@ bool Kasjer::interfejsUzytkownika() {
 
 		int wybor;
 		cin >> wybor;
+		if (cin.fail()) {
+			cin.clear();
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			wybor = 0;
+		}
 
 		switch (wybor) {
 		case 1:
@@ -65,16 +70,16 @@ void Kasjer::wyswietlKlientow() {
 void Kasjer::dodajKlienta() {
 	string imie, nazwisko, login, haslo, hasloPowtorzone;
 	cout << "Podaj imię: ";
-	cin >> imie;
+	getline(cin >> ws, imie);
 	cout << "Podaj nazwisko: ";
-	cin >> nazwisko;
+	getline(cin >> ws, nazwisko);
 	cout << "Podaj login: ";
-	cin >> login;
+	getline(cin >> ws, login);
 	cout << "Podaj hasło: ";
-	cin >> haslo;
+	getline(cin >> ws, haslo);
 	while (haslo != hasloPowtorzone) {
 		cout << "Powtórz hasło: ";
-		cin >> hasloPowtorzone;
+		getline(cin >> ws, hasloPowtorzone);
 	}
 	sql::Statement* kwerenda;
 	kwerenda = polaczenie->createStatement();
@@ -137,6 +142,12 @@ void Kasjer::zatwierdzTransakcje() {
 	int idTransakcji;
 	cout << "Podaj ID transakcji do zatwierdzenia: ";
 	cin >> idTransakcji;
+	if (cin.fail()) {
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		cout << "Nieprawidłowe ID transakcji." << endl;
+		return;
+	}
 	sql::PreparedStatement* pstmt;
 	sql::ResultSet* res;
 	try {
@@ -166,7 +177,6 @@ void Kasjer::zatwierdzTransakcje() {
 					cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
 				}
 			}
-			//update stanu magazynowego
 			delete pstmt;
 			pstmt = polaczenie->prepareStatement(
 				"SELECT id_produktu, ilosc FROM sprzedaze WHERE id_transakcji = ?;"

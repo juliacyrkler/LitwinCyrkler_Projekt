@@ -20,14 +20,19 @@ void Sklep::ekranPowitalny() {
 	cout << "--> 3 - Wyjdź z aplikacji" << endl;
 	int wybor;
 	cin >> wybor;
+	if(cin.fail()){
+		cin.clear();
+		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		wybor = 0;
+	}
 
 	switch (wybor) {
 		case 1: {
 			string login, haslo;
 			cout << "Podaj login: ";
-			cin >> login;
+			getline(cin >> ws, login);
 			cout << "Podaj hasło: ";
-			cin >> haslo;
+			getline(cin >> ws, haslo);
 			if (czyUserIstnieje(login, haslo)) {
 				uzytkownik = zaloguj(login, haslo);
 				if (uzytkownik->interfejsUzytkownika()) {
@@ -43,16 +48,16 @@ void Sklep::ekranPowitalny() {
 		case 2: {
 			string imie, nazwisko, login, haslo, hasloPowtorzone;
 			cout << "Podaj imię: ";
-			cin >> imie;
+			getline(cin >> ws, imie);
 			cout << "Podaj nazwisko: ";
-			cin >> nazwisko;
+			getline(cin >> ws, nazwisko);
 			cout << "Podaj login: ";
-			cin >> login;
+			getline(cin >> ws, login);
 			cout << "Podaj hasło: ";
-			cin >> haslo;
+			getline(cin >> ws, haslo);
 			while (haslo != hasloPowtorzone) {
 				cout << "Powtórz hasło: ";
-				cin >> hasloPowtorzone;
+				getline(cin >> ws, hasloPowtorzone);
 			}
 			if (utworzKonto(imie, nazwisko, login, haslo)) {
 				cout << endl << "Konto utworzone pomyślnie." << endl << endl;
@@ -64,8 +69,12 @@ void Sklep::ekranPowitalny() {
 			}
 			break;
 		}
-		default:
+		case 3:
 			cout << endl << "Trwa zamykanie aplikacji. Do zobaczenia!";
+			break;
+		default:
+			cout << endl << "Nieprawidłowy wybór. Spróbuj ponownie." << endl << endl;
+			ekranPowitalny();
 			break;
 	}
 }
