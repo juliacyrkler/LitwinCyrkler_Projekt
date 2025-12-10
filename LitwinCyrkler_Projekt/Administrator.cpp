@@ -46,7 +46,7 @@ bool Administrator::interfejsUzytkownika() {
 void Administrator::dodajUzytkownika() {
 	int typ, liczba;
 	double stawka;
-	string imie, nazwisko, login, haslo, stanowisko, id, insert1, insert2;
+	string imie, nazwisko, login, haslo, stanowisko, id, insert1, insert2, stawkaString;
 	cout << "Podaj typ nowego użytkownika (1 - klient, 2 - kasjer, 3 - menadżer, 4 - administrator): ";
 	cin >> typ;
 	if (cin.fail() || typ < 1 || typ > 4) {
@@ -73,6 +73,8 @@ void Administrator::dodajUzytkownika() {
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
+		stawkaString = to_string(stawka);
+		stawkaString = stawkaString.replace(stawkaString.find(','), 1, ".");
 		cout << "Podaj liczbę godzin pracy w tygodniu nowego pracownika: ";
 		cin >> liczba;
 		if (cin.fail() || liczba < 0) {
@@ -102,8 +104,8 @@ void Administrator::dodajUzytkownika() {
 	if (wynik->next()) {
 		id = wynik->getString("max_id");
 	}
-	if (typ > 1)  insert2 = "insert into pracownicy values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", \"" + stanowisko + "\", " + to_string(stawka) + ", " + to_string(liczba) + ");";
-	else insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	if (typ > 1)  insert2 = "insert into pracownicy (`user_id`, `pracownik_id`, `imie`, `nazwisko`, `typ_pracownika`, `stawka_godzinowa`, `godz_w_tyg`) values (" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", \"" + stanowisko + "\", " + stawkaString + ", " + to_string(liczba) + ");";
+	else insert2 = "insert into klienci values (" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
 	kwerenda->execute(insert2);
 	delete wynik;
 	delete kwerenda;
