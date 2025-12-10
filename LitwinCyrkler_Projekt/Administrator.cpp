@@ -13,6 +13,7 @@ bool Administrator::interfejsUzytkownika() {
 
 	bool wyloguj = false;
 	while (!wyloguj) {
+		clearConsole();
 		cout << endl << "Co chcesz zrobić?" << endl;
 		cout << "--> 1 - Dodaj nowego użytkownika" << endl;
 		cout << "--> 2 - Usuń użytkownika" << endl;
@@ -27,14 +28,16 @@ bool Administrator::interfejsUzytkownika() {
 
 		switch (wybor) {
 		case 1:
+			clearConsole();
 			this->dodajUzytkownika();
 			break;
 		case 2:
+			clearConsole();
 			this->usunUzytkownika();
 			break;
 		case 3:
+			clearConsole();
 			wyloguj = true;
-			system("cls");
 			break;
 		default:
 			break;
@@ -52,6 +55,7 @@ void Administrator::dodajUzytkownika() {
 	if (cin.fail() || typ < 1 || typ > 4) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Nieprawidłowy typ użytkownika." << endl;
 		return;
 	}
@@ -70,6 +74,7 @@ void Administrator::dodajUzytkownika() {
 		if (cin.fail() || stawka < 30.5) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			clearConsole();
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
@@ -80,6 +85,7 @@ void Administrator::dodajUzytkownika() {
 		if (cin.fail() || liczba < 0) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			clearConsole();
 			cout << "Nieprawidłowe dane." << endl;
 			return;
 		}
@@ -92,6 +98,7 @@ void Administrator::dodajUzytkownika() {
 	string loginSelect = "select * from users where login = \"" + login + "\";";
 	sql::ResultSet* wynik = kwerenda->executeQuery(loginSelect);
 	if (wynik->next()) {
+		clearConsole();
 		cout << "Użytkownik o podanym loginie już istnieje." << endl;
 		delete wynik;
 		delete kwerenda;
@@ -119,6 +126,7 @@ void Administrator::usunUzytkownika() {
 	if (cin.fail() || (wybor != 1 && wybor != 2)) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Podano nieprawidłowe dane." << endl;
 		return;
 	}
@@ -135,11 +143,13 @@ void Administrator::usunUzytkownika() {
 		cout << endl;
 	}
 	int id;
+	clearConsole();
 	cout << "Podaj ID użytkownika do usunięcia: ";
 	cin >> id;
 	if (cin.fail() || id < 1) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		clearConsole();
 		cout << "Podano nieprawidłowe dane." << endl;
 		return;
 	}
@@ -148,8 +158,10 @@ void Administrator::usunUzytkownika() {
 	kwerenda->execute(delete1);
 	if (kwerenda->getUpdateCount() > 0) {
 		kwerenda->execute(delete2);
+		clearConsole();
 		cout << "Użytkownik został usunięty." << endl;
 	} else {
+		clearConsole();
 		cout << "Nie znaleziono użytkownika o podanym ID." << endl;
 	}
 	delete kwerenda;
