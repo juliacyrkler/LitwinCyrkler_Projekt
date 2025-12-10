@@ -116,6 +116,7 @@ void Administrator::dodajUzytkownika() {
 	kwerenda->execute(insert2);
 	delete wynik;
 	delete kwerenda;
+	cout << "Nowy użytkownik został dodany." << endl;
 }
 
 void Administrator::usunUzytkownika() {
