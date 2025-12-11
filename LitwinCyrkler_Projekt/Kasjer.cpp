@@ -198,10 +198,8 @@ void Kasjer::zatwierdzTransakcje() {
 				pstmt2->setInt(1, iloscSprzedana);
 				pstmt2->setInt(2, idProduktu);
 				if (pstmt2->executeUpdate() > 0) {
-					clearConsole();
 					cout << "Zaktualizowano stan magazynowy dla produktu ID: " << idProduktu << endl;
 				} else {
-					clearConsole();
 					cout << "Wystąpił błąd podczas aktualizacji stanu magazynowego dla produktu ID: " << idProduktu << endl;
 				}
 				delete pstmt2;
