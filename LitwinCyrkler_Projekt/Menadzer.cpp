@@ -86,10 +86,10 @@ void Menadzer::wyswietlKlientow() {
 	kwerenda = polaczenie->createStatement();
 	string select;
 	cout << "Lista klientów:" << endl;
-	select = "select klient_id, imie, nazwisko, srodki, pkt_znizkowe from klienci;";
+	select = "select klient_id, imie, nazwisko, srodki from klienci;";
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	while (wynik->next()) {
-		cout << "ID: " << wynik->getInt("klient_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stan środków: " << wynik->getDouble("srodki") << " zł, punkty lojalnościowe: " << wynik->getInt("pkt_znizkowe") << endl;
+		cout << "ID: " << wynik->getInt("klient_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stan środków: " << wynik->getDouble("srodki") << " zł" << endl;
 	}
 	delete wynik;
 	delete kwerenda;

@@ -121,9 +121,8 @@ Uzytkownik* Sklep::zaloguj(string login, string haslo) {
 					string imie = res->getString("imie");
 					string nazwisko = res->getString("nazwisko");
 					double srodki = res->getDouble("srodki");
-					int pkt = res->getInt("pkt_znizkowe");
 
-					return new Klient(idKlienta, imie, nazwisko, pkt, srodki, polaczenie);
+					return new Klient(idKlienta, imie, nazwisko, srodki, polaczenie);
 				}
 				delete res; delete pstmt;
 			}
@@ -171,7 +170,7 @@ bool Sklep::utworzKonto(string imie, string nazwisko, string login, string haslo
 	if (wynik->next()) {
 		id = wynik->getString("max_id");
 	}
-	string insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	string insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0);";
 	kwerenda->execute(insert2);
 	delete wynik;
 	delete kwerenda;

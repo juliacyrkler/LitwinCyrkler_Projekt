@@ -73,31 +73,30 @@ CREATE TABLE `klienci` (
   `klient_id` int(11) NOT NULL,
   `imie` varchar(25) NOT NULL,
   `nazwisko` varchar(35) NOT NULL,
-  `srodki` double DEFAULT 0,
-  `pkt_znizkowe` int(11) DEFAULT 0
+  `srodki` double DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `klienci`
 --
 
-INSERT INTO `klienci` (`user_id`, `klient_id`, `imie`, `nazwisko`, `srodki`, `pkt_znizkowe`) VALUES
-(3, 1, 'Antoni', 'Nabzdyk', 0, 0),
-(8, 32, 'Jan', 'Kowalski', 120.5, 120),
-(9, 33, 'Anna', 'Nowak', 60, 45),
-(10, 34, 'Piotr', 'Wiśniewski', 50.75, 230),
-(11, 35, 'Katarzyna', 'Wójcik', 80.4, 60),
-(12, 36, 'Michał', 'Kaczmarek', 12.2, 300),
-(13, 37, 'Agnieszka', 'Mazur', 10, 10),
-(14, 38, 'Tomasz', 'Zieliński', 19.99, 180),
-(15, 39, 'Monika', 'Kamińska', 430.8, 35),
-(16, 40, 'Paweł', 'Lewandowski', 50000, 500),
-(17, 41, 'Magdalena', 'Dąbrowska', 75.3, 55),
-(18, 42, 'Marcin', 'Pawlak', 140.1, 90),
-(19, 43, 'Natalia', 'Michalska', 620.7, 40),
-(20, 44, 'Robert', 'Król', 231, 200),
-(21, 45, 'Karolina', 'Wieczorek', 300, 15),
-(22, 46, 'Daniel', 'Jabłoński', 100.6, 350);
+INSERT INTO `klienci` (`user_id`, `klient_id`, `imie`, `nazwisko`, `srodki`) VALUES
+(3, 1, 'Antoni', 'Nabzdyk', 0),
+(8, 32, 'Jan', 'Kowalski', 120.5),
+(9, 33, 'Anna', 'Nowak', 60),
+(10, 34, 'Piotr', 'Wiśniewski', 50.75),
+(11, 35, 'Katarzyna', 'Wójcik', 80.4),
+(12, 36, 'Michał', 'Kaczmarek', 12.2),
+(13, 37, 'Agnieszka', 'Mazur', 10),
+(14, 38, 'Tomasz', 'Zieliński', 19.99),
+(15, 39, 'Monika', 'Kamińska', 430.8),
+(16, 40, 'Paweł', 'Lewandowski', 50000),
+(17, 41, 'Magdalena', 'Dąbrowska', 75.3),
+(18, 42, 'Marcin', 'Pawlak', 140.1),
+(19, 43, 'Natalia', 'Michalska', 620.7),
+(20, 44, 'Robert', 'Król', 231),
+(21, 45, 'Karolina', 'Wieczorek', 300),
+(22, 46, 'Daniel', 'Jabłoński', 100.6);
 
 -- --------------------------------------------------------
 

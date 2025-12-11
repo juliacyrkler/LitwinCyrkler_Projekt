@@ -9,8 +9,7 @@
 
 using namespace std;
 
-Klient::Klient(int id_, std::string imie_, std::string nazwisko_, int punkty_, double srodki_, sql::Connection* con) : Uzytkownik(id_, imie_, nazwisko_, con) {
-	this->punktyLojalnosciowe = punkty_;
+Klient::Klient(int id_, std::string imie_, std::string nazwisko_, double srodki_, sql::Connection* con) : Uzytkownik(id_, imie_, nazwisko_, con) {
 	this->srodkiNaKoncie = srodki_;
 }
 
@@ -221,7 +220,6 @@ double Klient::cenaKoszyka() {
 
 void Klient::pokazStanKonta() {
 	cout << "Stan konta: " << this->srodkiNaKoncie << " zł" << endl;
-	cout << "Punkty lojalnościowe: " << this->punktyLojalnosciowe << endl;
 }
 
 void Klient::wyswietlProdukty() {
