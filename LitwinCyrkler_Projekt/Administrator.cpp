@@ -9,11 +9,11 @@ using namespace std;
 Administrator::Administrator(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Administrator::interfejsUzytkownika() {
+	clearConsole();
 	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako administrator.";
 
 	bool wyloguj = false;
 	while (!wyloguj) {
-		clearConsole();
 		cout << endl << "Co chcesz zrobić?" << endl;
 		cout << "--> 1 - Dodaj nowego użytkownika" << endl;
 		cout << "--> 2 - Usuń użytkownika" << endl;
@@ -112,7 +112,7 @@ void Administrator::dodajUzytkownika() {
 		id = wynik->getString("max_id");
 	}
 	if (typ > 1)  insert2 = "insert into pracownicy (`user_id`, `pracownik_id`, `imie`, `nazwisko`, `typ_pracownika`, `stawka_godzinowa`, `godz_w_tyg`) values (" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", \"" + stanowisko + "\", " + stawkaString + ", " + to_string(liczba) + ");";
-	else insert2 = "insert into klienci values (" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	else insert2 = "insert into klienci values (" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0);";
 	kwerenda->execute(insert2);
 	delete wynik;
 	delete kwerenda;

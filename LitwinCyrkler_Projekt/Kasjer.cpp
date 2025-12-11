@@ -58,11 +58,11 @@ void Kasjer::wyswietlKlientow() {
 	kwerenda = polaczenie->createStatement();
 	string select;
 	cout << "Lista klientów:" << endl;
-	select = "select klient_id, imie, nazwisko, srodki, pkt_znizkowe, max(data_transakcji) as ostatnia_transakcja from klienci left join transakcje on klienci.klient_id = transakcje.kupujacy group by klienci.klient_id;";
+	select = "select klient_id, imie, nazwisko, srodki, max(data_transakcji) as ostatnia_transakcja from klienci left join transakcje on klienci.klient_id = transakcje.kupujacy group by klienci.klient_id;";
 	sql::ResultSet* wynik = kwerenda->executeQuery(select);
 	while (wynik->next()) {
 		string dataTransakcji = wynik->getString("ostatnia_transakcja") == "" ? "brak transakcji" : wynik->getString("ostatnia_transakcja");
-		cout << "ID: " << wynik->getInt("klient_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stan środków: " << wynik->getDouble("srodki") << " zł, punkty lojalnościowe: " << wynik->getInt("pkt_znizkowe") << ", data ostatniej transakcji: " << dataTransakcji << endl;
+		cout << "ID: " << wynik->getInt("klient_id") << ". " << wynik->getString("imie") << " " << wynik->getString("nazwisko") << ", stan środków: " << wynik->getDouble("srodki") << " zł, data ostatniej transakcji: " << dataTransakcji << endl;
 	}
 	delete wynik;
 	delete kwerenda;
@@ -100,7 +100,7 @@ void Kasjer::dodajKlienta() {
 	if (wynik->next()) {
 		id = wynik->getString("max_id");
 	}
-	string insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0, 0);";
+	string insert2 = "insert into klienci values(" + id + ", null, \"" + imie + "\", \"" + nazwisko + "\", 0);";
 	kwerenda->execute(insert2);
 	if (kwerenda->getUpdateCount() > 0) {
 		cout << "Pomyślnie dodano nowego klienta." << endl;
