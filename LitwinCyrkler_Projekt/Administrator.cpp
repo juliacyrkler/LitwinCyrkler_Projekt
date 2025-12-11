@@ -144,7 +144,6 @@ void Administrator::usunUzytkownika() {
 		cout << endl;
 	}
 	int id;
-	clearConsole();
 	cout << "Podaj ID użytkownika do usunięcia: ";
 	cin >> id;
 	if (cin.fail() || id < 1) {
