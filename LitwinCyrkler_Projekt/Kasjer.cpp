@@ -148,10 +148,10 @@ void Kasjer::zatwierdzTransakcje() {
 	if (cin.fail()) {
 		cin.clear();
 		cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		clearConsole();
 		cout << "Nieprawidłowe ID transakcji." << endl;
 		return;
 	}
+	clearConsole();
 	sql::PreparedStatement* pstmt;
 	sql::ResultSet* res;
 	try {
@@ -176,10 +176,9 @@ void Kasjer::zatwierdzTransakcje() {
 				pstmt->setDouble(1, cenaTransakcji);
 				pstmt->setInt(2, idKlienta);
 				if (pstmt->executeUpdate() > 0) {
-					clearConsole();
 					cout << "Środki zostały pobrane z konta klienta." << endl;
 				} else {
-					clearConsole(); cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
+					cout << "Wystąpił błąd podczas pobierania środków z konta klienta." << endl;
 				}
 			}
 			delete pstmt;

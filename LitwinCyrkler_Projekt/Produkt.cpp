@@ -28,10 +28,6 @@ void Produkt::NowaIloscWKoszyku(int nowaIlosc) {
 	this->iloscWKoszyku = nowaIlosc;
 }
 
-
 void Produkt::wyswietlProdukt() {
-	cout << "Id. "<<this->idProduktu << " -- " << this->nazwaProduktu << " -- " << this->cenaProduktu << " z³ -- x"<<this->iloscWKoszyku << endl;
-	//cout << "Kategoria: " << this->kategoriaProduktu << endl;
-	//cout << "Cena: " << this->cenaProduktu << " z³" << endl;
-	//cout << "Stan magazynowy: " << this->stanMagazynowy << endl;
+	cout << "Id. "<<this->idProduktu << " -- " << this->nazwaProduktu << " -- " << this->cenaProduktu << " pln (x" << this->iloscWKoszyku << ")" << endl;
 }
