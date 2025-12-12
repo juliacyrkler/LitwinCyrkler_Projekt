@@ -14,7 +14,7 @@ Klient::Klient(int id_, std::string imie_, std::string nazwisko_, double srodki_
 }
 
 bool Klient::interfejsUzytkownika() {
-	clearConsole();
+	
 	cout << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako klient.";
 
 	bool wyloguj = false;
@@ -31,6 +31,7 @@ bool Klient::interfejsUzytkownika() {
 		cout << "--> 9 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+clearConsole();
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
