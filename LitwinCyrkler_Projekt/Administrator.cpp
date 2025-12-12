@@ -9,7 +9,7 @@ using namespace std;
 Administrator::Administrator(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Administrator::interfejsUzytkownika() {
-	clearConsole();
+	
 	cout << endl << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako administrator.";
 
 	bool wyloguj = false;
@@ -20,6 +20,7 @@ bool Administrator::interfejsUzytkownika() {
 		cout << "--> 3 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+clearConsole();
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
