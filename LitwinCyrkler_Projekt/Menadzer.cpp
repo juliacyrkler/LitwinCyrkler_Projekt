@@ -9,7 +9,7 @@ using namespace std;
 Menadzer::Menadzer(int id_, std::string imie_, std::string nazwisko_, double stawka_, int liczba_, sql::Connection* con) : Pracownik(id_, imie_, nazwisko_, stawka_, liczba_, con) {}
 
 bool Menadzer::interfejsUzytkownika() {
-	clearConsole();
+	
 	cout << "Witaj, " << this->zwrocImie() << "! Jesteś zalogowany jako menadżer.";
 
 	bool wyloguj = false;
@@ -24,6 +24,7 @@ bool Menadzer::interfejsUzytkownika() {
 		cout << "--> 7 - Wyloguj się" << endl;
 		int wybor;
 		cin >> wybor;
+clearConsole();
 		if (cin.fail()) {
 			cin.clear();
 			cin.ignore(numeric_limits<streamsize>::max(), '\n');
